@@ -26,6 +26,21 @@ public class GameScreen extends JPanel{
     int spawnDelay = 60;
     private ArrayList<Tower> towers = new ArrayList<>();
 
+    private Enemy createEnemy(String type) 
+    {
+        switch(type)
+        {
+        case "tank":
+            return new Enemy(0, 328, 0.5, 120);
+        case "fast":
+            return new Enemy(0, 328, 1.6, 40);
+        case "boss":
+            return new Enemy(0, 328, 0.3, 300);
+        default:
+            return new Enemy(0, 328, 1, 70); // base
+        }
+    }
+
     public GameScreen() {
         
         
@@ -57,7 +72,9 @@ public class GameScreen extends JPanel{
             spawnTimer++;
             if(spawnTimer>=spawnDelay) {
                 spawnTimer=0;
-                enemies.add(new Enemy(0, 328));
+                if(spawnTimer>=spawnDelay) {
+                spawnTimer=0;
+                enemies.add(createEnemy("fast"));
                 enemiesSpawned++;
             }
         } else if(enemies.size()==0) {
