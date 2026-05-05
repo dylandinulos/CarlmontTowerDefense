@@ -98,12 +98,7 @@ public class GameScreen extends JPanel{
             g.setColor(Color.GRAY);
             g.fillRect(i*32,10*32,32,32);
         }
-        for(int y = 10; y < 20;y++) {
-            for (int x = 10; x < 20; x++) {
-                g.setColor(Color.GRAY);
-                g.fillRect(x*32, y*32 , 32, 32);
-            }
-        }
+        
 
         for(Enemy enemy : enemies) {
             enemy.draw(g);
