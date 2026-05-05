@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-a
+
 public class GameScreen extends JPanel{
 
     private Random random;
@@ -67,7 +67,15 @@ public class GameScreen extends JPanel{
             spawnDelay = (int)(spawnDelay/1.1);
             }
         }
-        
+        for(Tower tower : towers) {
+            tower.update(enemies);
+        }
+        for(int i = 0; i < enemies.size();i++) {
+            Enemy enemy = enemies.get(i);
+            if(enemy.health <= 0) {
+                enemies.remove(i);
+            }
+        }
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -84,11 +92,19 @@ public class GameScreen extends JPanel{
                 g.drawRect(x*32,y*32,32,32);
         }
         }
-
+        
+        //PATH
         for(int i=0;i<20;i++){
             g.setColor(Color.GRAY);
             g.fillRect(i*32,10*32,32,32);
         }
+        for(int y = 10; y < 20;y++) {
+            for (int x = 10; x < 20; x++) {
+                g.setColor(Color.GRAY);
+                g.fillRect(x*32, y*32 , 32, 32);
+            }
+        }
+
         for(Enemy enemy : enemies) {
             enemy.draw(g);
         }
