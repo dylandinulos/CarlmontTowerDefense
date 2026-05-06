@@ -60,13 +60,20 @@ public class Tower {
     public void update(ArrayList<Enemy> enemies) {
         timer++;
         if(timer>=cooldown){
-            timer=0;
+            Enemy target = null;
+            double furthestProgress = -1;
             for(Enemy enemy : enemies) {
                 double distance = Math.sqrt(Math.pow(enemy.x - x, 2) + Math.pow(enemy.y - y, 2));
                 if(distance <= range*32) {
-                    enemy.health-=damage;
-                    break; //REMOVE IF WE WANT SPLASH DAMAGE
+                    if(enemy.progress > furthestProgress) {
+                        furthestProgress = enemy.progress;
+                        target = enemy;
+                    }
                 }
+            }
+            if(target != null) {
+                target.health-=damage;
+                timer =0;
             }
         }
     }
