@@ -8,6 +8,7 @@ public class Enemy{
     double speed;
     int health;
     int maxHealth;
+    public double progress;
     //int reward;   ---  for later
     
 
@@ -22,6 +23,7 @@ public class Enemy{
 
     public void update() {
         x+=speed;
+        progress = x;
     }
 
     public void draw(Graphics g) {
