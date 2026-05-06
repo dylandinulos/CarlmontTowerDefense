@@ -1,7 +1,5 @@
  
 
-package main;
-
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -12,7 +10,7 @@ public class Enemy{
     int maxHealth;
     //int reward;   ---  for later
     
-    
+
     public Enemy(double x, double y, double speed, int health) {
         this.x = x;
         this.y = y;
@@ -20,10 +18,6 @@ public class Enemy{
         this.health = health;
         this.maxHealth = health;
         //this.reward = reward;
-    }
-
-    public Enemy(double x, double y) {
-        this(x, y, 1.5, 10);
     }
 
     public void update() {
@@ -36,5 +30,3 @@ public class Enemy{
     }
 
 }
-
-
