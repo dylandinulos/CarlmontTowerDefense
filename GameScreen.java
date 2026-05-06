@@ -1,4 +1,4 @@
-package main;
+ 
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -33,16 +33,17 @@ public class GameScreen extends JPanel{
         case "tank":
             return new Enemy(0, 328, 0.5, 120);
         case "fast":
-            return new Enemy(0, 328, 1.6, 40);
+            return new Enemy(0, 328, 2.5, 40);
         case "boss":
             return new Enemy(0, 328, 0.3, 300);
         default:
             return new Enemy(0, 328, 1, 70); // base
         }
     }
-
-    public GameScreen() {
+    
+        public GameScreen() {
         
+
         
         random = new Random();
 
@@ -72,9 +73,7 @@ public class GameScreen extends JPanel{
             spawnTimer++;
             if(spawnTimer>=spawnDelay) {
                 spawnTimer=0;
-                if(spawnTimer>=spawnDelay) {
-                spawnTimer=0;
-                enemies.add(createEnemy("fast"));
+                enemies.add(createEnemy("tank"));
                 enemiesSpawned++;
             }
         } else if(enemies.size()==0) {
@@ -109,14 +108,11 @@ public class GameScreen extends JPanel{
                 g.drawRect(x*32,y*32,32,32);
         }
         }
-        
-        //PATH
+
         for(int i=0;i<20;i++){
             g.setColor(Color.GRAY);
             g.fillRect(i*32,10*32,32,32);
         }
-        
-
         for(Enemy enemy : enemies) {
             enemy.draw(g);
         }
@@ -124,7 +120,6 @@ public class GameScreen extends JPanel{
         g.drawString("Score: "+score, 10, 20);
         for(Tower tower : towers) {
             tower.draw(g);
-            
         }
     }
 
