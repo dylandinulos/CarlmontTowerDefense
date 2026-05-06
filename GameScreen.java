@@ -20,11 +20,11 @@ public class GameScreen extends JPanel{
     private ArrayList<Enemy> enemies = new ArrayList<>();
     int score = 1000;
     int wave = 0;
-    int enemiesToSpawn = 0;
-    int enemiesSpawned = 0;
     int spawnTimer = 0;
     int spawnDelay = 60;
     private ArrayList<Tower> towers = new ArrayList<>();
+    private ArrayList<ArrayList<String>> waves = new ArrayList<>(); // WAVES
+    private int currentEnemyIndex = 0;
 
     private Enemy createEnemy(String type) 
     {
@@ -53,14 +53,47 @@ public class GameScreen extends JPanel{
         });
         timer.start();
         
-        enemiesToSpawn = 1;
-        enemiesSpawned = 0;
+
         towers.add(new Tower(1,5*32+4,320-28));
-    }
-    
-    public void update() {
         
-        for(int i =0; i<enemies.size();i++) {
+        //WAVES <<<<<
+        // Wave 0
+        ArrayList<String> wave0 = new ArrayList<>();
+        wave0.add("base");
+
+        // Wave 1
+        ArrayList<String> wave1 = new ArrayList<>();
+        wave1.add("base");
+        wave1.add("base");
+        wave1.add("fast");
+
+        // Wave 2
+        ArrayList<String> wave2 = new ArrayList<>();
+        wave2.add("tank");
+        wave2.add("fast");
+        wave2.add("fast");
+        wave2.add("base");
+
+        // Wave 3 (example mix)
+        ArrayList<String> wave3 = new ArrayList<>();
+        wave3.add("tank");
+        wave3.add("tank");
+        wave3.add("fast");
+        wave3.add("boss");
+
+        // Add all waves
+        waves.add(wave0);
+        waves.add(wave1);
+        waves.add(wave2);
+        waves.add(wave3);
+
+    }
+
+    
+    public void update() 
+    {
+        
+        for(int i = enemies.size() - 1; i >= 0; i--) {
             Enemy enemy = enemies.get(i);
             enemy.update();
             if(enemy.x>640) {
@@ -69,30 +102,39 @@ public class GameScreen extends JPanel{
             }
         }
         if(wave<10){
-        if(enemiesSpawned<enemiesToSpawn) {
+        if(wave < waves.size()) {
+        ArrayList<String> currentWave = waves.get(wave);
+
+        if(currentEnemyIndex < currentWave.size()) 
+        {
             spawnTimer++;
-            if(spawnTimer>=spawnDelay) {
-                spawnTimer=0;
-                enemies.add(createEnemy("tank"));
-                enemiesSpawned++;
+            if(spawnTimer >= spawnDelay) {
+                spawnTimer = 0;
+
+                String type = currentWave.get(currentEnemyIndex);
+                enemies.add(createEnemy(type));
+
+                currentEnemyIndex++;
             }
-        } else if(enemies.size()==0) {
+        } 
+        else if(enemies.size() == 0) 
+        {
+            // next wave
             wave++;
-            enemiesToSpawn = wave*2;
-            enemiesSpawned = 0;
-            spawnDelay = (int)(spawnDelay/1.1);
+            currentEnemyIndex = 0;
             }
         }
         for(Tower tower : towers) {
             tower.update(enemies);
         }
-        for(int i = 0; i < enemies.size();i++) {
+        for(int i = enemies.size() - 1; i >= 0; i--)
             Enemy enemy = enemies.get(i);
             if(enemy.health <= 0) {
                 enemies.remove(i);
             }
         }
-    }
+        }
+    
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
