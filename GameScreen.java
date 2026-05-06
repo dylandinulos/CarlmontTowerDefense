@@ -124,6 +124,7 @@ public class GameScreen extends JPanel{
         g.drawString("Score: "+score, 10, 20);
         for(Tower tower : towers) {
             tower.draw(g);
+            awdsadawdsawdsawd;
         }
     }
 
