@@ -158,6 +158,9 @@ public class GameScreen extends JPanel{
         for(Enemy enemy : enemies) {
             enemy.draw(g);
         }
+        g.setColor(Color.WHITE);
+        g.fillRect( 0, 0, 4*32, 1 *32);
+     
         g.setColor(Color.BLACK);
         g.drawString("Score: "+score, 10, 20);
         for(Tower tower : towers) {
