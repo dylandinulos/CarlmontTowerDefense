@@ -1,62 +1,62 @@
- 
-
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.nio.Buffer;
-import java.util.Random;
-import javax.swing.JPanel;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Random;
 
-public class GameScreen extends JPanel{
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+public class GameScreen extends JPanel implements MouseListener
+{
+    public static final int TILE_SIZE = 32;
+    public static final int ROWS = 20;
+    public static final int COLS = 20;
 
     private Random random;
-    
 
-    
     private ArrayList<Enemy> enemies = new ArrayList<>();
-    int score = 1000;
-    int wave = 0;
-    int spawnTimer = 0;
-    int spawnDelay = 60;
     private ArrayList<Tower> towers = new ArrayList<>();
-    private ArrayList<ArrayList<String>> waves = new ArrayList<>(); // WAVES
+    private ArrayList<ArrayList<String>> waves = new ArrayList<>();
+
+    private int[][] map = new int[ROWS][COLS];
+
+    private int money = 100;
+    private int lives = 20;
+
+    private int wave = 0;
     private int currentEnemyIndex = 0;
 
-    private Enemy createEnemy(String type) 
-    {
-        switch(type)
-        {
-        case "tank":
-            return new Enemy(0, 328, 0.5, 120);
-        case "fast":
-            return new Enemy(0, 328, 2.5, 40);
-        case "boss":
-            return new Enemy(0, 328, 0.3, 300);
-        default:
-            return new Enemy(0, 328, 1, 70); // base
-        }
-    }
-    
-        public GameScreen() {
-        
+    private int spawnTimer = 0;
+    private int spawnDelay = 60;
 
-        
+    private Tower selectedTower = null;
+
+    public GameScreen()
+    {
         random = new Random();
+
+        // Create road
+        for(int i = 0; i < COLS; i++)
+        {
+            map[10][i] = 1;
+        }
+
+        setupWaves();
+
+        addMouseListener(this);
 
         Timer timer = new Timer(16, e -> {
             update();
             repaint();
         });
-        timer.start();
-        
 
-        towers.add(new Tower(1,5*32+4,320-28));
-        
-        //WAVES <<<<<
+        timer.start();
+    }
+
+    private void setupWaves()
+    {
         // Wave 0
         ArrayList<String> wave0 = new ArrayList<>();
         wave0.add("base");
@@ -74,109 +74,312 @@ public class GameScreen extends JPanel{
         wave2.add("fast");
         wave2.add("base");
 
-        // Wave 3 (example mix)
+        // Wave 3
         ArrayList<String> wave3 = new ArrayList<>();
         wave3.add("tank");
         wave3.add("tank");
         wave3.add("fast");
         wave3.add("boss");
 
-        // Add all waves
         waves.add(wave0);
         waves.add(wave1);
         waves.add(wave2);
         waves.add(wave3);
-
     }
 
-    
-    public void update() 
+    private Enemy createEnemy(String type)
     {
-        
-        for(int i = enemies.size() - 1; i >= 0; i--) {
+        switch(type)
+        {
+            case "tank":
+                return new Enemy(0, 328, 0.5, 120);
+
+            case "fast":
+                return new Enemy(0, 328, 2.2, 30);
+
+            case "boss":
+                return new Enemy(0, 328, 0.3, 300);
+
+            default:
+                return new Enemy(0, 328, 1, 70);
+        }
+    }
+
+    public void update()
+    {
+        // Update enemies
+        for(int i = 0; i < enemies.size(); i++)
+        {
             Enemy enemy = enemies.get(i);
+
             enemy.update();
-            if(enemy.x>640) {
+
+            // IMPORTANT
+            enemy.progress = enemy.x;
+
+            if(enemy.x > 640)
+            {
                 enemies.remove(i);
-                score-=enemy.health;
+                lives--;
+
+                i--;
             }
         }
-        if(wave<10){
-        if(wave < waves.size()) {
-        ArrayList<String> currentWave = waves.get(wave);
 
-        if(currentEnemyIndex < currentWave.size()) 
+        // Spawn enemies
+        if(wave < waves.size())
         {
-            spawnTimer++;
-            if(spawnTimer >= spawnDelay) {
-                spawnTimer = 0;
+            ArrayList<String> currentWave = waves.get(wave);
 
-                String type = currentWave.get(currentEnemyIndex);
-                enemies.add(createEnemy(type));
+            if(currentEnemyIndex < currentWave.size())
+            {
+                spawnTimer++;
 
-                currentEnemyIndex++;
+                if(spawnTimer >= spawnDelay)
+                {
+                    spawnTimer = 0;
+
+                    String type =
+                        currentWave.get(currentEnemyIndex);
+
+                    enemies.add(createEnemy(type));
+
+                    currentEnemyIndex++;
+                }
             }
-        } 
-        else if(enemies.size() == 0) 
-        {
-            // next wave
-            wave++;
-            currentEnemyIndex = 0;
+            else if(enemies.size() == 0)
+            {
+                wave++;
+                currentEnemyIndex = 0;
             }
         }
-        for(Tower tower : towers) {
+
+        // Update towers
+        for(Tower tower : towers)
+        {
             tower.update(enemies);
         }
-        for(int i = enemies.size() - 1; i >= 0; i--)
+
+        // Remove dead enemies
+        for(int i = 0; i < enemies.size(); i++)
+        {
             Enemy enemy = enemies.get(i);
-            if(enemy.health <= 0) {
+
+            if(enemy.health <= 0)
+            {
+                money += 10;
+
                 enemies.remove(i);
+
+                i--;
             }
         }
-        }
-    
-    public void paintComponent(Graphics g) {
+    }
+
+    @Override
+    public void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
-        
-        for(int y=0;y<20;y++) {
-            for(int x=0;x<20;x++) {
-                g.setColor(Color.GREEN);
-                g.fillRect(x*32,y*32,32,32);
-        }
-        }
-        for(int y=0;y<20;y++) {
-            for(int x=0;x<20;x++) {
+
+        // Draw map
+        for(int row = 0; row < ROWS; row++)
+        {
+            for(int col = 0; col < COLS; col++)
+            {
+                if(map[row][col] == 1)
+                {
+                    g.setColor(Color.GRAY);
+                }
+                else
+                {
+                    g.setColor(Color.GREEN);
+                }
+
+                g.fillRect(
+                    col * TILE_SIZE,
+                    row * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                );
+
                 g.setColor(Color.BLACK);
-                g.drawRect(x*32,y*32,32,32);
-        }
+
+                g.drawRect(
+                    col * TILE_SIZE,
+                    row * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                );
+            }
         }
 
-        for(int i=0;i<20;i++){
-            g.setColor(Color.GRAY);
-            g.fillRect(i*32,10*32,32,32);
-        }
-        for(Enemy enemy : enemies) {
+        // Draw enemies
+        for(Enemy enemy : enemies)
+        {
             enemy.draw(g);
+
+            // Health bar background
+            g.setColor(Color.RED);
+
+            g.fillRect(
+                (int)enemy.x,
+                (int)enemy.y - 8,
+                16,
+                4
+            );
+
+            // Health bar
+            g.setColor(Color.GREEN);
+
+            int healthWidth =
+                (int)((enemy.health /
+                (double)enemy.maxHealth) * 16);
+
+            g.fillRect(
+                (int)enemy.x,
+                (int)enemy.y - 8,
+                healthWidth,
+                4
+            );
         }
+
+        // Draw towers
+        for(Tower tower : towers)
+        {
+            tower.draw(g);
+        }
+
+        // Draw selected tower range
+        if(selectedTower != null)
+        {
+            g.setColor(Color.WHITE);
+
+            int radius =
+                selectedTower.getRange() * TILE_SIZE;
+
+            g.drawOval(
+                selectedTower.getX() + 12 - radius,
+                selectedTower.getY() + 12 - radius,
+                radius * 2,
+                radius * 2
+            );
+        }
+<<<<<<< HEAD
+
+        // UI
+=======
         g.setColor(Color.WHITE);
         g.fillRect( 0, 0, 4*32, 1 *32);
      
+>>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
         g.setColor(Color.BLACK);
-        g.drawString("Score: "+score, 10, 20);
-        for(Tower tower : towers) {
-            tower.draw(g);
+
+        g.drawString("Money: " + money, 10, 20);
+        g.drawString("Lives: " + lives, 10, 40);
+        g.drawString("Wave: " + wave, 10, 60);
+    }
+
+    private boolean towerExists(int row, int col)
+    {
+        for(Tower tower : towers)
+        {
+            int towerRow =
+                tower.getY() / TILE_SIZE;
+
+            int towerCol =
+                tower.getX() / TILE_SIZE;
+
+            if(towerRow == row &&
+               towerCol == col)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
+
+        // Check if clicking existing tower
+        for(Tower tower : towers)
+        {
+            if(mouseX >= tower.getX() &&
+               mouseX <= tower.getX() + 24 &&
+               mouseY >= tower.getY() &&
+               mouseY <= tower.getY() + 24)
+            {
+                selectedTower = tower;
+                return;
+            }
+        }
+
+        int col = mouseX / TILE_SIZE;
+        int row = mouseY / TILE_SIZE;
+
+        // Bounds check
+        if(row < 0 || row >= ROWS ||
+           col < 0 || col >= COLS)
+        {
+            return;
+        }
+
+        // Place tower
+        if(map[row][col] == 0 &&
+           !towerExists(row, col) &&
+           money >= 10)
+        {
+            towers.add(
+                new Tower(
+                    1,
+                    col * TILE_SIZE + 4,
+                    row * TILE_SIZE + 4
+                )
+            );
+
+            money -= 10;
         }
     }
 
-    
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
 
-    private int getRandomInt(int min, int max) {
-        return random.nextInt(100);
     }
-    private Color getRandomColor() {
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+
+    }
+
+    private int getRandomInt(int min, int max)
+    {
+        return random.nextInt(max - min + 1) + min;
+    }
+
+    private Color getRandomColor()
+    {
         int r = random.nextInt(256);
         int g = random.nextInt(256);
         int b = random.nextInt(256);
+
         return new Color(r, g, b);
     }
 }
