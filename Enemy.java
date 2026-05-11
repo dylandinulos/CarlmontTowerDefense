@@ -10,7 +10,7 @@ public class Enemy{
     int maxHealth;
     public double progress;
     //int reward;   ---  for later
-    
+
 
     public Enemy(double x, double y, double speed, int health) {
         this.x = x;
