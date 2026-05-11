@@ -1,10 +1,14 @@
- 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+//For images
+import java.net.URL;
+import javax.swing.*;
+import java.awt.*;
 
 public class Tower {
     private int damage;
@@ -15,6 +19,7 @@ public class Tower {
     private int lastDamageTime = 0;
     private int x, y;
     private int timer = 0;
+    private Image image;
     public Tower (int index, int x, int y){
         this.x = x;
         this.y = y;
@@ -25,7 +30,7 @@ public class Tower {
             cost = 1;
             range = 3;
             cooldown = 120; 
-
+            loadImage(x, y, "Student.jpg");
         }
         else if (index == 2) //SuperSenior
         {
@@ -33,6 +38,7 @@ public class Tower {
             cost = 3;
             range = 1;
             cooldown = 180;
+            loadImage(x, y, "SuperSenior.jpg");
         }
         else if (index == 3) //Teacher
         {
@@ -40,13 +46,15 @@ public class Tower {
             cost = 2;
             range = 4;
             cooldown = 160;
+            loadImage(x, y, "Teacher.jpg");
         }
-        else if (index == 4) //Counselor
+        else if (index == 4) //Nurse
         {
             damage = 3;
             cost = 5;
             range = 3;
             cooldown = 120;
+            loadImage(x, y, "Nurse.jpg");
         }
         else if (index == 5) //Principal
         {
@@ -54,8 +62,8 @@ public class Tower {
             cost = 7;
             range = 4;
             cooldown = 200;
-        }
-        
+            loadImage(x, y, "Principal.jpg");
+        }                
     }
     public void update(ArrayList<Enemy> enemies) {
         timer++;
@@ -77,11 +85,19 @@ public class Tower {
             }
         }
     }
-        
-    
-    public void draw(Graphics g) {
-        g.setColor(Color.BLUE);
-        g.fillRect(x, y, 24, 24);
+   public void loadImage(int x, int y, String fileName)
+    {
+        URL ImageURL = getClass().getResource(fileName); //Remember to change this to our characters in the game
+        this.image = new ImageIcon(ImageURL).getImage();
+    }
+    public void draw(Graphics g) 
+    {
+        g.drawImage(image, 320, 288, 32, 32, null); // We need to make the 0, 0 correspond to where they want to place the tower
+    }     
+    //Uncomment if we want the rectangle
+    // public void draw(Graphics g) {
+    //    g.setColor(Color.BLUE);
+    //    g.fillRect(x, y, 24, 24);
     }
 
 
