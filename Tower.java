@@ -1,148 +1,198 @@
+package main;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.net.URL;
 import java.util.ArrayList;
 
-<<<<<<< HEAD
+import javax.swing.ImageIcon;
+
 public class Tower
 {
-=======
-//For images
-import java.net.URL;
-import javax.swing.*;
-import java.awt.*;
-
-public class Tower {
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
     private int damage;
     private int cost;
     private int range;
     private int cooldown;
 
     private int x, y;
+
     private int timer = 0;
-<<<<<<< HEAD
+
+    private Image image;
 
     public Tower(int index, int x, int y)
     {
-=======
-    private Image image;
-    public Tower (int index, int x, int y){
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
         this.x = x;
         this.y = y;
 
-        if(index == 1) // Student
+        // Student
+        if(index == 1)
         {
             damage = 100;
             cost = 1;
             range = 3;
-<<<<<<< HEAD
             cooldown = 120;
-=======
-            cooldown = 120; 
-            loadImage(x, y, "Student.jpg");
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
+
+            loadImage("Student.jpg");
         }
-        else if(index == 2) // SuperSenior
+
+        // Super Senior
+        else if(index == 2)
         {
             damage = 3;
             cost = 3;
             range = 1;
             cooldown = 180;
-            loadImage(x, y, "SuperSenior.jpg");
+
+            loadImage("SuperSenior.jpg");
         }
-        else if(index == 3) // Teacher
+
+        // Teacher
+        else if(index == 3)
         {
             damage = 2;
             cost = 2;
             range = 4;
             cooldown = 160;
-            loadImage(x, y, "Teacher.jpg");
+
+            loadImage("Teacher.jpg");
         }
-<<<<<<< HEAD
-        else if(index == 4) // Counselor
-=======
-        else if (index == 4) //Nurse
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
+
+        // Nurse / Counselor
+        else if(index == 4)
         {
             damage = 3;
             cost = 5;
             range = 3;
             cooldown = 120;
-            loadImage(x, y, "Nurse.jpg");
+
+            loadImage("Nurse.jpg");
         }
-        else // Principal
+
+        // Principal
+        else if(index == 5)
         {
             damage = 5;
             cost = 7;
             range = 4;
             cooldown = 200;
-<<<<<<< HEAD
+
+            loadImage("Principal.jpg");
         }
-=======
-            loadImage(x, y, "Principal.jpg");
-        }                
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
+
+        // Fallback
+        else
+        {
+            damage = 1;
+            cost = 1;
+            range = 2;
+            cooldown = 120;
+        }
     }
 
     public void update(ArrayList<Enemy> enemies)
     {
         timer++;
 
+        // Still cooling down
         if(timer < cooldown)
+        {
             return;
+        }
 
-        Enemy target = null;
-        double furthestProgress = -1;
+        Enemy bestTarget = null;
 
+        double bestProgress = -1;
+
+        // Find furthest enemy in range
         for(Enemy enemy : enemies)
         {
             double dx = enemy.x - x;
             double dy = enemy.y - y;
 
-            double distance = Math.sqrt(dx * dx + dy * dy);
+            double distance =
+                Math.sqrt(dx * dx + dy * dy);
 
             if(distance <= range * 32)
             {
-                if(enemy.progress > furthestProgress)
+                if(enemy.progress > bestProgress)
                 {
-                    furthestProgress = enemy.progress;
-                    target = enemy;
+                    bestProgress = enemy.progress;
+                    bestTarget = enemy;
                 }
             }
         }
 
-        if(target != null)
+        // Attack target
+        if(bestTarget != null)
         {
-            target.health -= damage;
+            bestTarget.health -= damage;
+
             timer = 0;
         }
     }
-<<<<<<< HEAD
+
+    private void loadImage(String fileName)
+    {
+        try
+        {
+            URL imageURL =
+                getClass().getResource(fileName);
+
+            if(imageURL != null)
+            {
+                image =
+                    new ImageIcon(imageURL).getImage();
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void draw(Graphics g)
     {
-        g.setColor(Color.BLUE);
-        g.fillRect(x, y, 24, 24);
-=======
-   public void loadImage(int x, int y, String fileName)
-    {
-        URL ImageURL = getClass().getResource(fileName); //Remember to change this to our characters in the game
-        this.image = new ImageIcon(ImageURL).getImage();
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
-    }
-    public void draw(Graphics g) 
-    {
-        g.drawImage(image, 320, 288, 32, 32, null); // We need to make the 0, 0 correspond to where they want to place the tower
-    }     
-    //Uncomment if we want the rectangle
-    // public void draw(Graphics g) {
-    //    g.setColor(Color.BLUE);
-    //    g.fillRect(x, y, 24, 24);
+        // Draw image if loaded
+        if(image != null)
+        {
+            g.drawImage(
+                image,
+                x,
+                y,
+                24,
+                24,
+                null
+            );
+        }
+        else
+        {
+            // Fallback rectangle
+            g.setColor(Color.BLUE);
+
+            g.fillRect(x, y, 24, 24);
+        }
     }
 
-    // getters (needed for selection + range UI)
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public int getRange() { return range; }
+    // Getters
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
+
+    public int getRange()
+    {
+        return range;
+    }
+
+    public int getCost()
+    {
+        return cost;
+    }
 }
