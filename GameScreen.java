@@ -1,5 +1,10 @@
+package main;
+
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -15,6 +20,29 @@ public class GameScreen extends JPanel implements MouseListener
     public static final int COLS = 20;
 
     private Random random;
+
+    // Road path
+    Point[] path = {
+
+        new Point(16, 336),
+
+        new Point(176, 336),
+        new Point(176, 144),
+
+        new Point(400, 144),
+        new Point(400, 464),
+
+        new Point(112, 464),
+        new Point(112, 208),
+
+        new Point(528, 208),
+        new Point(528, 528),
+
+        new Point(304, 528),
+        new Point(304, 336),
+
+        new Point(688, 336)
+    };
 
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<Tower> towers = new ArrayList<>();
@@ -37,7 +65,7 @@ public class GameScreen extends JPanel implements MouseListener
     {
         random = new Random();
 
-        // Create road
+        // Create simple road row for placement blocking
         for(int i = 0; i < COLS; i++)
         {
             map[10][i] = 1;
@@ -46,6 +74,9 @@ public class GameScreen extends JPanel implements MouseListener
         setupWaves();
 
         addMouseListener(this);
+
+        // Example starter tower
+        
 
         Timer timer = new Timer(16, e -> {
             update();
@@ -92,37 +123,102 @@ public class GameScreen extends JPanel implements MouseListener
         switch(type)
         {
             case "tank":
-                return new Enemy(0, 328, 0.5, 120);
+                return new Enemy(path, 0.5, 120);
 
             case "fast":
-                return new Enemy(0, 328, 2.2, 30);
+                return new Enemy(path, 2.5, 40);
 
             case "boss":
-                return new Enemy(0, 328, 0.3, 300);
+                return new Enemy(path, 0.3, 300);
 
             default:
-                return new Enemy(0, 328, 1, 70);
+                return new Enemy(path, 1, 70);
         }
+    }
+
+    private boolean isOnPath(int mouseX, int mouseY)
+    {
+    for(int i = 0; i < path.length - 1; i++)
+    {
+        Point p1 = path[i];
+        Point p2 = path[i + 1];
+
+        double distance =
+            pointToSegmentDistance(
+                mouseX,
+                mouseY,
+                p1.x,
+                p1.y,
+                p2.x,
+                p2.y
+            );
+
+        // road thickness
+        if(distance < 20)
+        {
+            return true;
+        }
+    }
+
+    return false;
+    }
+
+    private double pointToSegmentDistance(
+    double px,
+    double py,
+    double x1,
+    double y1,
+    double x2,
+    double y2
+)
+{
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+
+    if(dx == 0 && dy == 0)
+    {
+        dx = px - x1;
+        dy = py - y1;
+
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    double t =
+        ((px - x1) * dx + (py - y1) * dy) /
+        (dx * dx + dy * dy);
+
+    t = Math.max(0, Math.min(1, t));
+
+    double closestX = x1 + t * dx;
+    double closestY = y1 + t * dy;
+
+    dx = px - closestX;
+    dy = py - closestY;
+
+    return Math.sqrt(dx * dx + dy * dy);
     }
 
     public void update()
     {
         // Update enemies
-        for(int i = 0; i < enemies.size(); i++)
+        for(int i = enemies.size() - 1; i >= 0; i--)
         {
             Enemy enemy = enemies.get(i);
 
             enemy.update();
 
-            // IMPORTANT
+            // Optional targeting helper
             enemy.progress = enemy.x;
 
+            // Enemy escaped
             if(enemy.x > 640)
             {
                 enemies.remove(i);
+
                 lives--;
 
-                i--;
+                // Optional score penalty
+                money -= 5;
             }
         }
 
@@ -161,7 +257,7 @@ public class GameScreen extends JPanel implements MouseListener
         }
 
         // Remove dead enemies
-        for(int i = 0; i < enemies.size(); i++)
+        for(int i = enemies.size() - 1; i >= 0; i--)
         {
             Enemy enemy = enemies.get(i);
 
@@ -170,10 +266,55 @@ public class GameScreen extends JPanel implements MouseListener
                 money += 10;
 
                 enemies.remove(i);
-
-                i--;
             }
         }
+    }
+
+    private void drawRoad(Graphics g)
+    {
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Road base
+        g2.setColor(Color.DARK_GRAY);
+
+        g2.setStroke(new BasicStroke(24));
+
+        for(int i = 0; i < path.length - 1; i++)
+        {
+            g2.drawLine(
+                path[i].x,
+                path[i].y,
+                path[i + 1].x,
+                path[i + 1].y
+            );
+        }
+
+        // Yellow dashed center line
+        g2.setColor(Color.YELLOW);
+
+        g2.setStroke(
+            new BasicStroke(
+                3,
+                BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL,
+                0,
+                new float[]{10},
+                0
+            )
+        );
+
+        for(int i = 0; i < path.length - 1; i++)
+        {
+            g2.drawLine(
+                path[i].x,
+                path[i].y,
+                path[i + 1].x,
+                path[i + 1].y
+            );
+        }
+
+        // Reset stroke
+        g2.setStroke(new BasicStroke(1));
     }
 
     @Override
@@ -181,19 +322,12 @@ public class GameScreen extends JPanel implements MouseListener
     {
         super.paintComponent(g);
 
-        // Draw map
+        // Draw grass tiles
         for(int row = 0; row < ROWS; row++)
         {
             for(int col = 0; col < COLS; col++)
             {
-                if(map[row][col] == 1)
-                {
-                    g.setColor(Color.GRAY);
-                }
-                else
-                {
-                    g.setColor(Color.GREEN);
-                }
+                g.setColor(Color.GREEN);
 
                 g.fillRect(
                     col * TILE_SIZE,
@@ -213,6 +347,9 @@ public class GameScreen extends JPanel implements MouseListener
             }
         }
 
+        // Draw road
+        drawRoad(g);
+
         // Draw enemies
         for(Enemy enemy : enemies)
         {
@@ -222,8 +359,8 @@ public class GameScreen extends JPanel implements MouseListener
             g.setColor(Color.RED);
 
             g.fillRect(
-                (int)enemy.x,
-                (int)enemy.y - 8,
+                (int)enemy.x - 8,
+                (int)enemy.y - 16,
                 16,
                 4
             );
@@ -236,8 +373,8 @@ public class GameScreen extends JPanel implements MouseListener
                 (double)enemy.maxHealth) * 16);
 
             g.fillRect(
-                (int)enemy.x,
-                (int)enemy.y - 8,
+                (int)enemy.x - 8,
+                (int)enemy.y - 16,
                 healthWidth,
                 4
             );
@@ -249,7 +386,7 @@ public class GameScreen extends JPanel implements MouseListener
             tower.draw(g);
         }
 
-        // Draw selected tower range
+        // Selected tower range
         if(selectedTower != null)
         {
             g.setColor(Color.WHITE);
@@ -264,14 +401,13 @@ public class GameScreen extends JPanel implements MouseListener
                 radius * 2
             );
         }
-<<<<<<< HEAD
 
-        // UI
-=======
+        // UI background
         g.setColor(Color.WHITE);
-        g.fillRect( 0, 0, 4*32, 1 *32);
-     
->>>>>>> 87bebbaeead5fae1374660c6b2bf5b88dd3f90a9
+
+        g.fillRect(0, 0, 4 * 32, 3 * 32);
+
+        // UI text
         g.setColor(Color.BLACK);
 
         g.drawString("Money: " + money, 10, 20);
@@ -305,7 +441,7 @@ public class GameScreen extends JPanel implements MouseListener
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        // Check if clicking existing tower
+        // Select existing tower
         for(Tower tower : towers)
         {
             if(mouseX >= tower.getX() &&
@@ -314,6 +450,7 @@ public class GameScreen extends JPanel implements MouseListener
                mouseY <= tower.getY() + 24)
             {
                 selectedTower = tower;
+
                 return;
             }
         }
@@ -329,9 +466,9 @@ public class GameScreen extends JPanel implements MouseListener
         }
 
         // Place tower
-        if(map[row][col] == 0 &&
-           !towerExists(row, col) &&
-           money >= 10)
+        if(!isOnPath(mouseX, mouseY) &&
+        !towerExists(row, col) &&
+        money >= 10)
         {
             towers.add(
                 new Tower(
