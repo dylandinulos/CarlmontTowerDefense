@@ -79,7 +79,9 @@ public class GameScreen extends JPanel implements MouseListener
         
 
         Timer timer = new Timer(16, e -> {
-            update();
+            if (Game.State == Game.STATE.GAME){
+                update();
+            }            
             repaint();
         });
 
@@ -321,100 +323,105 @@ public class GameScreen extends JPanel implements MouseListener
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-
-        // Draw grass tiles
-        for(int row = 0; row < ROWS; row++)
+        if (Game.State == Game.STATE.MENU)
         {
-            for(int col = 0; col < COLS; col++)
+            startScreen.render(g);
+        }
+        else 
+        {
+            // Draw grass tiles
+            for(int row = 0; row < ROWS; row++)
             {
-                g.setColor(Color.GREEN);
-
+                for(int col = 0; col < COLS; col++)
+                {
+                    g.setColor(Color.GREEN);
+    
+                    g.fillRect(
+                        col * TILE_SIZE,
+                        row * TILE_SIZE,
+                        TILE_SIZE,
+                        TILE_SIZE
+                    );
+    
+                    g.setColor(Color.BLACK);
+    
+                    g.drawRect(
+                        col * TILE_SIZE,
+                        row * TILE_SIZE,
+                        TILE_SIZE,
+                        TILE_SIZE
+                    );
+                }
+            }
+    
+            // Draw road
+            drawRoad(g);
+    
+            // Draw enemies
+            for(Enemy enemy : enemies)
+            {
+                enemy.draw(g);
+    
+                // Health bar background
+                g.setColor(Color.RED);
+    
                 g.fillRect(
-                    col * TILE_SIZE,
-                    row * TILE_SIZE,
-                    TILE_SIZE,
-                    TILE_SIZE
+                    (int)enemy.x - 8,
+                    (int)enemy.y - 16,
+                    16,
+                    4
                 );
-
-                g.setColor(Color.BLACK);
-
-                g.drawRect(
-                    col * TILE_SIZE,
-                    row * TILE_SIZE,
-                    TILE_SIZE,
-                    TILE_SIZE
+    
+                // Health bar
+                g.setColor(Color.GREEN);
+    
+                int healthWidth =
+                    (int)((enemy.health /
+                    (double)enemy.maxHealth) * 16);
+    
+                g.fillRect(
+                    (int)enemy.x - 8,
+                    (int)enemy.y - 16,
+                    healthWidth,
+                    4
                 );
             }
-        }
-
-        // Draw road
-        drawRoad(g);
-
-        // Draw enemies
-        for(Enemy enemy : enemies)
-        {
-            enemy.draw(g);
-
-            // Health bar background
-            g.setColor(Color.RED);
-
-            g.fillRect(
-                (int)enemy.x - 8,
-                (int)enemy.y - 16,
-                16,
-                4
-            );
-
-            // Health bar
-            g.setColor(Color.GREEN);
-
-            int healthWidth =
-                (int)((enemy.health /
-                (double)enemy.maxHealth) * 16);
-
-            g.fillRect(
-                (int)enemy.x - 8,
-                (int)enemy.y - 16,
-                healthWidth,
-                4
-            );
-        }
-
-        // Draw towers
-        for(Tower tower : towers)
-        {
-            tower.draw(g);
-        }
-
-        // Selected tower range
-        if(selectedTower != null)
-        {
+    
+            // Draw towers
+            for(Tower tower : towers)
+            {
+                tower.draw(g);
+            }
+    
+            // Selected tower range
+            if(selectedTower != null)
+            {
+                g.setColor(Color.WHITE);
+    
+                int radius =
+                    selectedTower.getRange() * TILE_SIZE;
+    
+                g.drawOval(
+                    selectedTower.getX() + 12 - radius,
+                    selectedTower.getY() + 12 - radius,
+                    radius * 2,
+                    radius * 2
+                );
+            }
+    
+            // UI background
             g.setColor(Color.WHITE);
-
-            int radius =
-                selectedTower.getRange() * TILE_SIZE;
-
-            g.drawOval(
-                selectedTower.getX() + 12 - radius,
-                selectedTower.getY() + 12 - radius,
-                radius * 2,
-                radius * 2
-            );
+    
+            g.fillRect(0, 0, 4 * 32, 3 * 32);
+    
+            // UI text
+            g.setColor(Color.BLACK);
+    
+            g.drawString("Money: " + money, 10, 20);
+            g.drawString("Lives: " + lives, 10, 40);
+            g.drawString("Wave: " + wave, 10, 60);
         }
-
-        // UI background
-        g.setColor(Color.WHITE);
-
-        g.fillRect(0, 0, 4 * 32, 3 * 32);
-
-        // UI text
-        g.setColor(Color.BLACK);
-
-        g.drawString("Money: " + money, 10, 20);
-        g.drawString("Lives: " + lives, 10, 40);
-        g.drawString("Wave: " + wave, 10, 60);
     }
-
     private boolean towerExists(int row, int col)
     {
         for(Tower tower : towers)
@@ -438,6 +445,12 @@ public class GameScreen extends JPanel implements MouseListener
     @Override
     public void mousePressed(MouseEvent e)
     {
+        if (Game.State == Game.STATE.MENU)
+        {
+            Game.State = Game.STATE.GAME;
+            repaint();
+            return;
+        }
         int mouseX = e.getX();
         int mouseY = e.getY();
 
