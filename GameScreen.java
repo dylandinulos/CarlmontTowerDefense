@@ -1,4 +1,4 @@
-package main;
+ 
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -64,7 +64,7 @@ public class GameScreen extends JPanel implements MouseListener
     public GameScreen()
     {
         random = new Random();
-
+        
         // Create simple road row for placement blocking
         for(int i = 0; i < COLS; i++)
         {
@@ -74,6 +74,9 @@ public class GameScreen extends JPanel implements MouseListener
         setupWaves();
 
         addMouseListener(this);
+        
+        setFocusable(true);
+        requestFocusInWindow();
 
         // Example starter tower
         
@@ -86,8 +89,50 @@ public class GameScreen extends JPanel implements MouseListener
         });
 
         timer.start();
-    }
 
+    }
+    private void drawShop(Graphics g)
+    {
+        g.setColor(Color.DARK_GRAY);
+
+        g.fillRect(
+            0,
+            0,
+            getWidth(),
+            SHOP_HEIGHT
+        );
+
+            for(int i = 0; i < 5; i++)
+            {
+            int x =
+                10 + i * (SHOP_TILE_SIZE + 10);
+    
+            int y = 10;
+    
+            g.setColor(Color.GRAY);
+    
+            g.fillRect(
+                x,
+                y,
+                SHOP_TILE_SIZE,
+                SHOP_TILE_SIZE
+            );
+    
+            g.setColor(Color.BLACK);
+    
+            g.drawRect(
+                x,
+                y,
+                SHOP_TILE_SIZE,
+                SHOP_TILE_SIZE
+            );
+    
+            Tower preview =
+                new Tower(i + 1, x + 28, y + 28);
+    
+            preview.draw(g);
+        }
+    }
     private void setupWaves()
     {
         // Wave 0
@@ -165,40 +210,40 @@ public class GameScreen extends JPanel implements MouseListener
     return false;
     }
 
-    private double pointToSegmentDistance(
-    double px,
-    double py,
-    double x1,
-    double y1,
-    double x2,
-    double y2
-)
-{
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-
-    if(dx == 0 && dy == 0)
+        private double pointToSegmentDistance(
+        double px,
+        double py,
+        double x1,
+        double y1,
+        double x2,
+        double y2
+    )
     {
-        dx = px - x1;
-        dy = py - y1;
-
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+    
+        if(dx == 0 && dy == 0)
+        {
+            dx = px - x1;
+            dy = py - y1;
+    
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+    
+        double t =
+            ((px - x1) * dx + (py - y1) * dy) /
+            (dx * dx + dy * dy);
+    
+        t = Math.max(0, Math.min(1, t));
+    
+        double closestX = x1 + t * dx;
+        double closestY = y1 + t * dy;
+    
+        dx = px - closestX;
+        dy = py - closestY;
+    
         return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    double t =
-        ((px - x1) * dx + (py - y1) * dy) /
-        (dx * dx + dy * dy);
-
-    t = Math.max(0, Math.min(1, t));
-
-    double closestX = x1 + t * dx;
-    double closestY = y1 + t * dy;
-
-    dx = px - closestX;
-    dy = py - closestY;
-
-    return Math.sqrt(dx * dx + dy * dy);
-    }
+        }
 
     public void update()
     {
@@ -285,7 +330,7 @@ public class GameScreen extends JPanel implements MouseListener
         {
             g2.drawLine(
                 path[i].x,
-                path[i].y,
+                path[i].y,    
                 path[i + 1].x,
                 path[i + 1].y
             );
@@ -323,7 +368,13 @@ public class GameScreen extends JPanel implements MouseListener
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
+<<<<<<< HEAD
+        drawShop(g);
+        // Draw grass tiles
+        for(int row = 0; row < ROWS; row++)
+=======
         if (Game.State == Game.STATE.MENU)
+>>>>>>> 08a88d05b78dce118e5791e6b1b98035bdea74d1
         {
             startScreen.render(g);
         }
@@ -380,11 +431,28 @@ public class GameScreen extends JPanel implements MouseListener
                     (double)enemy.maxHealth) * 16);
     
                 g.fillRect(
+<<<<<<< HEAD
+                    col * TILE_SIZE,
+                    row * TILE_SIZE + SHOP_HEIGHT,
+                    TILE_SIZE,
+                    TILE_SIZE
+=======
                     (int)enemy.x - 8,
                     (int)enemy.y - 16,
                     healthWidth,
                     4
+>>>>>>> 08a88d05b78dce118e5791e6b1b98035bdea74d1
                 );
+<<<<<<< HEAD
+
+                g.setColor(Color.BLACK);
+
+                g.drawRect(
+                    col * TILE_SIZE,
+                    row * TILE_SIZE + SHOP_HEIGHT,
+                    TILE_SIZE,
+                    TILE_SIZE
+=======
             }
     
             // Draw towers
@@ -406,6 +474,7 @@ public class GameScreen extends JPanel implements MouseListener
                     selectedTower.getY() + 12 - radius,
                     radius * 2,
                     radius * 2
+>>>>>>> 08a88d05b78dce118e5791e6b1b98035bdea74d1
                 );
             }
     
@@ -421,6 +490,56 @@ public class GameScreen extends JPanel implements MouseListener
             g.drawString("Lives: " + lives, 10, 40);
             g.drawString("Wave: " + wave, 10, 60);
         }
+<<<<<<< HEAD
+
+        // UI background
+        g.setColor(Color.WHITE);
+
+        g.fillRect(0, 0, 4 * 32, 3 * 32);
+
+        // UI text
+        g.setColor(Color.BLACK);
+
+        g.drawString("Money: " + money, 10, 20);
+        g.drawString("Lives: " + lives, 10, 40);
+        g.drawString("Wave: " + wave, 10, 60);
+        
+                if(placingTower)
+        {
+            Point mouse =
+                getMousePosition();
+        
+            if(mouse != null)
+            {
+                Graphics2D g2 =
+                    (Graphics2D) g;
+        
+                g2.setComposite(
+                    java.awt.AlphaComposite.getInstance(
+                        java.awt.AlphaComposite.SRC_OVER,
+                        0.5f
+                    )
+                );
+        
+                Tower ghost =
+                    new Tower(
+                        selectedTowerType,
+                        mouse.x - 12,
+                        mouse.y - 12
+                    );
+        
+                ghost.draw(g);
+        
+                g2.setComposite(
+                    java.awt.AlphaComposite.getInstance(
+                        java.awt.AlphaComposite.SRC_OVER,
+                        1f
+                    )
+                );
+            }
+        }
+=======
+>>>>>>> 08a88d05b78dce118e5791e6b1b98035bdea74d1
     }
     private boolean towerExists(int row, int col)
     {
@@ -441,8 +560,7 @@ public class GameScreen extends JPanel implements MouseListener
 
         return false;
     }
-
-    @Override
+        @Override
     public void mousePressed(MouseEvent e)
     {
         if (Game.State == Game.STATE.MENU)
@@ -453,44 +571,57 @@ public class GameScreen extends JPanel implements MouseListener
         }
         int mouseX = e.getX();
         int mouseY = e.getY();
-
-        // Select existing tower
-        for(Tower tower : towers)
+    
+        // Clicking shop
+        for(int i = 0; i < 5; i++)
         {
-            if(mouseX >= tower.getX() &&
-               mouseX <= tower.getX() + 24 &&
-               mouseY >= tower.getY() &&
-               mouseY <= tower.getY() + 24)
+            int x =
+                10 + i * (SHOP_TILE_SIZE + 10);
+        
+            int y = 10;
+    
+            if(mouseX >= x &&
+               mouseX <= x + SHOP_TILE_SIZE &&
+               mouseY >= y &&
+               mouseY <= y + SHOP_TILE_SIZE)
             {
-                selectedTower = tower;
-
+                selectedTowerType = i + 1;
+    
+                placingTower = true;
+    
                 return;
             }
         }
-
+    
+        if(!placingTower)
+        {
+            return;
+        }
+    
+        int adjustedY =
+            mouseY;
+    
         int col = mouseX / TILE_SIZE;
-        int row = mouseY / TILE_SIZE;
-
-        // Bounds check
+        int row = adjustedY / TILE_SIZE;
+    
         if(row < 0 || row >= ROWS ||
            col < 0 || col >= COLS)
         {
             return;
         }
-
-        // Place tower
-        if(!isOnPath(mouseX, mouseY) &&
-        !towerExists(row, col) &&
-        money >= 10)
+    
+        if(!isOnPath(mouseX, adjustedY) &&
+           !towerExists(row, col) &&
+           money >= 10)
         {
             towers.add(
                 new Tower(
-                    1,
+                    selectedTowerType,
                     col * TILE_SIZE + 4,
                     row * TILE_SIZE + 4
                 )
             );
-
+    
             money -= 10;
         }
     }
