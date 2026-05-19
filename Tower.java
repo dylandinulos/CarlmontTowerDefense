@@ -1,4 +1,4 @@
-package main;
+ 
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-public class Tower
+public class Tower 
 {
     private int damage;
     private int cost;
