@@ -15,6 +15,12 @@ public class Game extends JFrame
     private BufferedImage img;
     private StartScreen startScreen;
 
+    public enum STATE{
+        MENU,
+        GAME,
+        END
+    };
+    
     public static STATE State = STATE.MENU;
     public Game() {
         setSize(640,640);
