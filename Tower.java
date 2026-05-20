@@ -62,10 +62,10 @@ public class Tower
         // Nurse / Counselor
         else if(index == 4)
         {
-            damage = 3;
+            damage = 35;
             cost = 5;
             range = 3;
-            cooldown = 120;
+            cooldown = 50;
 
             loadImage("Nurse.jpg");
         }
@@ -73,7 +73,7 @@ public class Tower
         // Principal
         else if(index == 5)
         {
-            damage = 5;
+            damage = 150;
             cost = 7;
             range = 4;
             cooldown = 200;
