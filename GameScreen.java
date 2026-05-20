@@ -83,11 +83,10 @@ public class GameScreen extends JPanel implements MouseListener
 
         Timer timer = new Timer(16, e -> {
             if (Game.State == Game.STATE.GAME){
-                update();
-            }            
+                update();              
+            }
             repaint();
-        });
-
+        });      
         timer.start();
 
     }
@@ -267,6 +266,10 @@ public class GameScreen extends JPanel implements MouseListener
                 // Optional score penalty
                 money -= 5;
             }
+            if (lives <= 0)
+            {
+                Game.State = Game.STATE.END;
+            }
         }
 
         // Spawn enemies
@@ -377,6 +380,10 @@ public class GameScreen extends JPanel implements MouseListener
 >>>>>>> 08a88d05b78dce118e5791e6b1b98035bdea74d1
         {
             startScreen.render(g);
+        }
+        else if (Game.State == Game.STATE.END)
+        {
+            endScreen.render(g);
         }
         else 
         {
