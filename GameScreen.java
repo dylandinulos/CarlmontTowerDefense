@@ -3,6 +3,7 @@ package main;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,9 +20,14 @@ import javax.swing.Timer;
 
 public class GameScreen extends JPanel implements MouseListener
 {
-    public static final int TILE_SIZE = 32;
-    public static final int ROWS = 20;
-    public static final int COLS = 20;
+    // Better sizing for MacBook Air
+    public static final int TILE_SIZE = 40;
+
+    // 1440 / 40
+    public static final int COLS = 36;
+
+    // Fits vertically inside 900 height
+    public static final int ROWS = 19;
 
     public static final int SHOP_HEIGHT =
         TILE_SIZE * 3;
@@ -37,37 +43,60 @@ public class GameScreen extends JPanel implements MouseListener
     private boolean placingTower = false;
     private int selectedTowerType = 1;
 
-    private StartScreen startScreen = new StartScreen();
-    private EndScreen endScreen = new EndScreen();
+    private StartScreen startScreen =
+        new StartScreen();
 
-    // Road path
+    private EndScreen endScreen =
+        new EndScreen();
+
+    
+    // Looping path with upward start
     Point[] path = {
 
-        new Point(16, 336 + SHOP_HEIGHT),
+    // Start middle-left
+    new Point(0, 460 + SHOP_HEIGHT),
 
-        new Point(176, 336 + SHOP_HEIGHT),
-        new Point(176, 144 + SHOP_HEIGHT),
+    // Go upward first
+    new Point(300, 460 + SHOP_HEIGHT),
 
-        new Point(400, 144 + SHOP_HEIGHT),
-        new Point(400, 464 + SHOP_HEIGHT),
+    new Point(300, 220 + SHOP_HEIGHT),
 
-        new Point(112, 464 + SHOP_HEIGHT),
-        new Point(112, 208 + SHOP_HEIGHT),
+    // Move right
+    new Point(660, 220 + SHOP_HEIGHT),
 
-        new Point(528, 208 + SHOP_HEIGHT),
-        new Point(528, 528 + SHOP_HEIGHT),
+    // Go down
+    new Point(660, 660 + SHOP_HEIGHT),
 
-        new Point(304, 528 + SHOP_HEIGHT),
-        new Point(304, 336 + SHOP_HEIGHT),
+    // Move right
+    new Point(1180, 660 + SHOP_HEIGHT),
 
-        new Point(688, 336 + SHOP_HEIGHT)
+    // Go back up
+    new Point(1180, 320 + SHOP_HEIGHT),
+
+    // Go back up
+    new Point(1180, 320 + SHOP_HEIGHT),
+
+    // Back left
+    new Point(820, 320 + SHOP_HEIGHT),
+
+    // Down again
+    new Point(820, 500 + SHOP_HEIGHT),
+
+    // Final exit
+    new Point(1440, 500 + SHOP_HEIGHT)
     };
 
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-    private ArrayList<Tower> towers = new ArrayList<>();
-    private ArrayList<ArrayList<String>> waves = new ArrayList<>();
+    private ArrayList<Enemy> enemies =
+        new ArrayList<>();
 
-    private int[][] map = new int[ROWS][COLS];
+    private ArrayList<Tower> towers =
+        new ArrayList<>();
+
+    private ArrayList<ArrayList<String>> waves =
+        new ArrayList<>();
+
+    private int[][] map =
+        new int[ROWS][COLS];
 
     private int money = 100;
     private int lives = 20;
@@ -86,16 +115,12 @@ public class GameScreen extends JPanel implements MouseListener
 
         loadImages();
 
-        for(int i = 0; i < COLS; i++)
-        {
-            map[10][i] = 1;
-        }
-
         setupWaves();
 
         addMouseListener(this);
 
         setFocusable(true);
+
         requestFocusInWindow();
 
         Timer timer = new Timer(16, e -> {
@@ -116,21 +141,29 @@ public class GameScreen extends JPanel implements MouseListener
         try
         {
             URL imageURL =
-                getClass().getResource("classroom.png");
+                getClass().getResource(
+                    "classroom.png"
+                );
 
             if(imageURL != null)
             {
                 schoolImage =
-                    new ImageIcon(imageURL).getImage();
+                    new ImageIcon(
+                        imageURL
+                    ).getImage();
             }
 
             URL fieldURL =
-                getClass().getResource("field.png");
+                getClass().getResource(
+                    "field.png"
+                );
 
             if(fieldURL != null)
             {
                 fieldImage =
-                    new ImageIcon(fieldURL).getImage();
+                    new ImageIcon(
+                        fieldURL
+                    ).getImage();
             }
         }
         catch(Exception e)
@@ -153,7 +186,8 @@ public class GameScreen extends JPanel implements MouseListener
         for(int i = 0; i < 5; i++)
         {
             int x =
-                130 + 10 + i * (SHOP_TILE_SIZE + 10);
+                160 +
+                i * (SHOP_TILE_SIZE + 30);
 
             int y = 10;
 
@@ -176,7 +210,11 @@ public class GameScreen extends JPanel implements MouseListener
             );
 
             Tower preview =
-                new Tower(i + 1, x + 28, y + 28);
+                new Tower(
+                    i + 1,
+                    x + 34,
+                    y + 34
+                );
 
             preview.draw(g);
         }
@@ -184,21 +222,29 @@ public class GameScreen extends JPanel implements MouseListener
 
     private void setupWaves()
     {
-        ArrayList<String> wave0 = new ArrayList<>();
+        ArrayList<String> wave0 =
+            new ArrayList<>();
+
         wave0.add("base");
 
-        ArrayList<String> wave1 = new ArrayList<>();
+        ArrayList<String> wave1 =
+            new ArrayList<>();
+
         wave1.add("base");
         wave1.add("base");
         wave1.add("fast");
 
-        ArrayList<String> wave2 = new ArrayList<>();
+        ArrayList<String> wave2 =
+            new ArrayList<>();
+
         wave2.add("tank");
         wave2.add("fast");
         wave2.add("fast");
         wave2.add("base");
 
-        ArrayList<String> wave3 = new ArrayList<>();
+        ArrayList<String> wave3 =
+            new ArrayList<>();
+
         wave3.add("tank");
         wave3.add("tank");
         wave3.add("fast");
@@ -215,22 +261,43 @@ public class GameScreen extends JPanel implements MouseListener
         switch(type)
         {
             case "tank":
-                return new Enemy(path, 0.5, 120);
+                return new Enemy(
+                    path,
+                    0.5,
+                    120
+                );
 
             case "fast":
-                return new Enemy(path, 2.5, 40);
+                return new Enemy(
+                    path,
+                    2.5,
+                    40
+                );
 
             case "boss":
-                return new Enemy(path, 0.3, 300);
+                return new Enemy(
+                    path,
+                    0.3,
+                    300
+                );
 
             default:
-                return new Enemy(path, 1, 70);
+                return new Enemy(
+                    path,
+                    1,
+                    70
+                );
         }
     }
 
-    private boolean isOnPath(int mouseX, int mouseY)
+    private boolean isOnPath(
+        int mouseX,
+        int mouseY
+    )
     {
-        for(int i = 0; i < path.length - 1; i++)
+        for(int i = 0;
+            i < path.length - 1;
+            i++)
         {
             Point p1 = path[i];
             Point p2 = path[i + 1];
@@ -245,13 +312,40 @@ public class GameScreen extends JPanel implements MouseListener
                     p2.y
                 );
 
-            if(distance < 20)
+            if(distance < 30)
             {
                 return true;
             }
         }
 
         return false;
+    }
+    private boolean isOnSchool(int mouseX, int mouseY)
+    {
+    int schoolX = 27 * TILE_SIZE;
+    int schoolY = 1 * TILE_SIZE + SHOP_HEIGHT;
+
+    int schoolWidth = 6 * TILE_SIZE;
+    int schoolHeight = 5 * TILE_SIZE;
+
+    return mouseX >= schoolX &&
+           mouseX <= schoolX + schoolWidth &&
+           mouseY >= schoolY &&
+           mouseY <= schoolY + schoolHeight;
+    }
+
+    private boolean isOnField(int mouseX, int mouseY)
+    {
+    int fieldX = 2 * TILE_SIZE;
+    int fieldY = 13 * TILE_SIZE + SHOP_HEIGHT;
+
+    int fieldWidth = 9 * TILE_SIZE;
+    int fieldHeight = 4 * TILE_SIZE;
+
+    return mouseX >= fieldX &&
+           mouseX <= fieldX + fieldWidth &&
+           mouseY >= fieldY &&
+           mouseY <= fieldY + fieldHeight;
     }
 
     private double pointToSegmentDistance(
@@ -271,29 +365,44 @@ public class GameScreen extends JPanel implements MouseListener
             dx = px - x1;
             dy = py - y1;
 
-            return Math.sqrt(dx * dx + dy * dy);
+            return Math.sqrt(
+                dx * dx + dy * dy
+            );
         }
 
         double t =
-            ((px - x1) * dx + (py - y1) * dy) /
+            ((px - x1) * dx +
+             (py - y1) * dy) /
             (dx * dx + dy * dy);
 
-        t = Math.max(0, Math.min(1, t));
+        t = Math.max(
+            0,
+            Math.min(1, t)
+        );
 
-        double closestX = x1 + t * dx;
-        double closestY = y1 + t * dy;
+        double closestX =
+            x1 + t * dx;
+
+        double closestY =
+            y1 + t * dy;
 
         dx = px - closestX;
         dy = py - closestY;
 
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.sqrt(
+            dx * dx + dy * dy
+        );
     }
 
     public void update()
     {
-        for(int i = enemies.size() - 1; i >= 0; i--)
+        for(int i =
+            enemies.size() - 1;
+            i >= 0;
+            i--)
         {
-            Enemy enemy = enemies.get(i);
+            Enemy enemy =
+                enemies.get(i);
 
             enemy.update();
 
@@ -309,27 +418,36 @@ public class GameScreen extends JPanel implements MouseListener
 
                 if(lives <= 0)
                 {
-                    Game.State = Game.STATE.END;
+                    Game.State =
+                        Game.STATE.END;
                 }
             }
         }
 
         if(wave < waves.size())
         {
-            ArrayList<String> currentWave = waves.get(wave);
+            ArrayList<String>
+                currentWave =
+                waves.get(wave);
 
-            if(currentEnemyIndex < currentWave.size())
+            if(currentEnemyIndex <
+               currentWave.size())
             {
                 spawnTimer++;
 
-                if(spawnTimer >= spawnDelay)
+                if(spawnTimer >=
+                   spawnDelay)
                 {
                     spawnTimer = 0;
 
                     String type =
-                        currentWave.get(currentEnemyIndex);
+                        currentWave.get(
+                            currentEnemyIndex
+                        );
 
-                    enemies.add(createEnemy(type));
+                    enemies.add(
+                        createEnemy(type)
+                    );
 
                     currentEnemyIndex++;
                 }
@@ -337,6 +455,7 @@ public class GameScreen extends JPanel implements MouseListener
             else if(enemies.size() == 0)
             {
                 wave++;
+
                 currentEnemyIndex = 0;
             }
         }
@@ -346,9 +465,13 @@ public class GameScreen extends JPanel implements MouseListener
             tower.update(enemies);
         }
 
-        for(int i = enemies.size() - 1; i >= 0; i--)
+        for(int i =
+            enemies.size() - 1;
+            i >= 0;
+            i--)
         {
-            Enemy enemy = enemies.get(i);
+            Enemy enemy =
+                enemies.get(i);
 
             if(enemy.health <= 0)
             {
@@ -361,13 +484,18 @@ public class GameScreen extends JPanel implements MouseListener
 
     private void drawRoad(Graphics g)
     {
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 =
+            (Graphics2D) g;
 
         g2.setColor(Color.DARK_GRAY);
 
-        g2.setStroke(new BasicStroke(24));
+        g2.setStroke(
+            new BasicStroke(36)
+        );
 
-        for(int i = 0; i < path.length - 1; i++)
+        for(int i = 0;
+            i < path.length - 1;
+            i++)
         {
             g2.drawLine(
                 path[i].x,
@@ -381,16 +509,18 @@ public class GameScreen extends JPanel implements MouseListener
 
         g2.setStroke(
             new BasicStroke(
-                3,
+                4,
                 BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL,
                 0,
-                new float[]{10},
+                new float[]{15},
                 0
             )
         );
 
-        for(int i = 0; i < path.length - 1; i++)
+        for(int i = 0;
+            i < path.length - 1;
+            i++)
         {
             g2.drawLine(
                 path[i].x,
@@ -400,7 +530,9 @@ public class GameScreen extends JPanel implements MouseListener
             );
         }
 
-        g2.setStroke(new BasicStroke(1));
+        g2.setStroke(
+            new BasicStroke(1)
+        );
     }
 
     @Override
@@ -408,13 +540,15 @@ public class GameScreen extends JPanel implements MouseListener
     {
         super.paintComponent(g);
 
-        if(Game.State == Game.STATE.MENU)
+        if(Game.State ==
+           Game.STATE.MENU)
         {
             startScreen.render(g);
             return;
         }
 
-        if(Game.State == Game.STATE.END)
+        if(Game.State ==
+           Game.STATE.END)
         {
             endScreen.render(g);
             return;
@@ -422,15 +556,27 @@ public class GameScreen extends JPanel implements MouseListener
 
         drawShop(g);
 
-        for(int row = 0; row < ROWS; row++)
+        // Grid
+        for(int row = 0;
+            row < ROWS;
+            row++)
         {
-            for(int col = 0; col < COLS; col++)
+            for(int col = 0;
+                col < COLS;
+                col++)
             {
-                g.setColor(Color.GREEN);
+                g.setColor(
+                    new Color(
+                        50,
+                        170,
+                        50
+                    )
+                );
 
                 g.fillRect(
                     col * TILE_SIZE,
-                    row * TILE_SIZE + SHOP_HEIGHT,
+                    row * TILE_SIZE +
+                    SHOP_HEIGHT,
                     TILE_SIZE,
                     TILE_SIZE
                 );
@@ -439,33 +585,39 @@ public class GameScreen extends JPanel implements MouseListener
 
                 g.drawRect(
                     col * TILE_SIZE,
-                    row * TILE_SIZE + SHOP_HEIGHT,
+                    row * TILE_SIZE +
+                    SHOP_HEIGHT,
                     TILE_SIZE,
                     TILE_SIZE
                 );
             }
         }
 
+        // School image
         g.drawImage(
             schoolImage,
-            14 * TILE_SIZE,
-            2 * TILE_SIZE + SHOP_HEIGHT,
-            4 * TILE_SIZE,
-            3 * TILE_SIZE,
+            27 * TILE_SIZE,
+            1 * TILE_SIZE +
+            SHOP_HEIGHT,
+            6 * TILE_SIZE,
+            5 * TILE_SIZE,
             null
         );
 
+        // Field image
         g.drawImage(
             fieldImage,
-            1 * TILE_SIZE,
-            15 * TILE_SIZE + SHOP_HEIGHT,
-            7 * TILE_SIZE,
+            2 * TILE_SIZE,
+            13 * TILE_SIZE +
+            SHOP_HEIGHT,
+            9 * TILE_SIZE,
             4 * TILE_SIZE,
             null
         );
 
         drawRoad(g);
 
+        // Draw enemies
         for(Enemy enemy : enemies)
         {
             enemy.draw(g);
@@ -473,46 +625,58 @@ public class GameScreen extends JPanel implements MouseListener
             g.setColor(Color.RED);
 
             g.fillRect(
-                (int)enemy.x - 8,
-                (int)enemy.y - 16,
-                16,
-                4
+                (int)enemy.x - 16,
+                (int)enemy.y - 24,
+                32,
+                6
             );
 
             g.setColor(Color.GREEN);
 
             int healthWidth =
-                (int)((enemy.health /
-                (double)enemy.maxHealth) * 16);
+                (int)(
+                    (enemy.health /
+                    (double)
+                    enemy.maxHealth)
+                    * 32
+                );
 
             g.fillRect(
-                (int)enemy.x - 8,
-                (int)enemy.y - 16,
+                (int)enemy.x - 16,
+                (int)enemy.y - 24,
                 healthWidth,
-                4
+                6
             );
         }
 
+        // Towers
         for(Tower tower : towers)
         {
             tower.draw(g);
         }
 
+        // Selected tower range
         if(selectedTower != null)
         {
             g.setColor(Color.WHITE);
 
             int radius =
-                selectedTower.getRange() * TILE_SIZE;
+                selectedTower.getRange()
+                * TILE_SIZE;
 
             g.drawOval(
-                selectedTower.getX() + 12 - radius,
-                selectedTower.getY() + 12 - radius,
+                selectedTower.getX() +
+                16 - radius,
+
+                selectedTower.getY() +
+                16 - radius,
+
                 radius * 2,
                 radius * 2
             );
         }
 
+        // Ghost tower
         if(placingTower)
         {
             Point mouse =
@@ -524,8 +688,10 @@ public class GameScreen extends JPanel implements MouseListener
                     (Graphics2D) g;
 
                 g2.setComposite(
-                    AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER,
+                    AlphaComposite
+                    .getInstance(
+                        AlphaComposite
+                        .SRC_OVER,
                         0.5f
                     )
                 );
@@ -533,41 +699,85 @@ public class GameScreen extends JPanel implements MouseListener
                 Tower ghost =
                     new Tower(
                         selectedTowerType,
-                        mouse.x - 12,
-                        mouse.y - 12
+                        mouse.x - 16,
+                        mouse.y - 16
                     );
 
                 ghost.draw(g);
 
                 g2.setComposite(
-                    AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER,
+                    AlphaComposite
+                    .getInstance(
+                        AlphaComposite
+                        .SRC_OVER,
                         1f
                     )
                 );
             }
         }
 
-        g.setColor(Color.WHITE);
+        
+    // Stats box
+g.setColor(Color.WHITE);
 
-        g.fillRect(0, 0, 140, 80);
+g.fillRect(
+    10,
+    10,
+    135,
+    95
+);
 
-        g.setColor(Color.BLACK);
+g.setColor(Color.BLACK);
 
-        g.drawString("Money: " + money, 10, 20);
-        g.drawString("Lives: " + lives, 10, 40);
-        g.drawString("Wave: " + wave, 10, 60);
+g.drawRect(
+    10,
+    10,
+    135,
+    95
+);
+
+g.setFont(
+    new Font(
+        "Arial",
+        Font.BOLD,
+        20
+    )
+);
+
+g.drawString(
+    "Money: " + money,
+    20,
+    38
+);
+
+g.drawString(
+    "Lives: " + lives,
+    20,
+    63
+);
+
+g.drawString(
+    "Wave: " + wave,
+    20,
+    88
+);
     }
 
-    private boolean towerExists(int row, int col)
+    private boolean towerExists(
+        int row,
+        int col
+    )
     {
         for(Tower tower : towers)
         {
             int towerRow =
-                (tower.getY() - SHOP_HEIGHT) / TILE_SIZE;
+                (tower.getY() -
+                SHOP_HEIGHT) /
+                TILE_SIZE;
 
             int towerCol =
-                tower.getX() / TILE_SIZE;
+                tower.getX() /
+                TILE_SIZE;
 
             if(towerRow == row &&
                towerCol == col)
@@ -580,43 +790,58 @@ public class GameScreen extends JPanel implements MouseListener
     }
 
     @Override
-    public void mousePressed(MouseEvent e)
+    public void mousePressed(
+        MouseEvent e
+    )
     {
-        if(Game.State == Game.STATE.MENU)
+        if(Game.State ==
+           Game.STATE.MENU)
         {
-            Game.State = Game.STATE.GAME;
+            Game.State =
+                Game.STATE.GAME;
+
             repaint();
+
             return;
         }
 
         int mouseX = e.getX();
         int mouseY = e.getY();
 
+        // Select placed tower
         for(Tower tower : towers)
         {
             if(mouseX >= tower.getX() &&
-               mouseX <= tower.getX() + 24 &&
+               mouseX <=
+               tower.getX() + 32 &&
                mouseY >= tower.getY() &&
-               mouseY <= tower.getY() + 24)
+               mouseY <=
+               tower.getY() + 32)
             {
                 selectedTower = tower;
+
                 return;
             }
         }
 
+        // Shop selection
         for(int i = 0; i < 5; i++)
         {
             int x =
-                140 + i * (SHOP_TILE_SIZE + 10);
+                160 +
+                i * (SHOP_TILE_SIZE + 30);
 
             int y = 10;
 
             if(mouseX >= x &&
-               mouseX <= x + SHOP_TILE_SIZE &&
+               mouseX <=
+               x + SHOP_TILE_SIZE &&
                mouseY >= y &&
-               mouseY <= y + SHOP_TILE_SIZE)
+               mouseY <=
+               y + SHOP_TILE_SIZE)
             {
-                selectedTowerType = i + 1;
+                selectedTowerType =
+                    i + 1;
 
                 placingTower = true;
 
@@ -629,26 +854,34 @@ public class GameScreen extends JPanel implements MouseListener
             return;
         }
 
-        int col = mouseX / TILE_SIZE;
+        int col =
+            mouseX / TILE_SIZE;
 
         int row =
-            (mouseY - SHOP_HEIGHT) / TILE_SIZE;
+            (mouseY -
+            SHOP_HEIGHT) /
+            TILE_SIZE;
 
-        if(row < 0 || row >= ROWS ||
-           col < 0 || col >= COLS)
+        if(row < 0 ||
+           row >= ROWS ||
+           col < 0 ||
+           col >= COLS)
         {
             return;
         }
 
         if(!isOnPath(mouseX, mouseY) &&
-           !towerExists(row, col) &&
-           money >= 10)
+        !isOnSchool(mouseX, mouseY) &&
+        !isOnField(mouseX, mouseY) &&
+        !towerExists(row, col) &&
+        money >= 10)
         {
             towers.add(
                 new Tower(
                     selectedTowerType,
                     col * TILE_SIZE + 4,
-                    row * TILE_SIZE + SHOP_HEIGHT + 4
+                    row * TILE_SIZE +
+                    SHOP_HEIGHT + 4
                 )
             );
 
@@ -657,32 +890,45 @@ public class GameScreen extends JPanel implements MouseListener
     }
 
     @Override
-    public void mouseClicked(MouseEvent e)
+    public void mouseClicked(
+        MouseEvent e
+    )
     {
 
     }
 
     @Override
-    public void mouseReleased(MouseEvent e)
+    public void mouseReleased(
+        MouseEvent e
+    )
     {
 
     }
 
     @Override
-    public void mouseEntered(MouseEvent e)
+    public void mouseEntered(
+        MouseEvent e
+    )
     {
 
     }
 
     @Override
-    public void mouseExited(MouseEvent e)
+    public void mouseExited(
+        MouseEvent e
+    )
     {
 
     }
 
-    private int getRandomInt(int min, int max)
+    private int getRandomInt(
+        int min,
+        int max
+    )
     {
-        return random.nextInt(max - min + 1) + min;
+        return random.nextInt(
+            max - min + 1
+        ) + min;
     }
 
     private Color getRandomColor()
