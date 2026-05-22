@@ -45,13 +45,20 @@ public class Enemy
         }
 
         // Next target point
-        Point target = path[pathIndex + 1];
+        Point target =
+            path[pathIndex + 1];
 
-        double dx = target.x - x;
-        double dy = target.y - y;
+        double dx =
+            target.x - x;
+
+        double dy =
+            target.y - y;
 
         double distance =
-            Math.sqrt(dx * dx + dy * dy);
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
 
         // Reached target point
         if(distance <= speed)
@@ -64,8 +71,13 @@ public class Enemy
         else
         {
             // Move toward target
-            x += (dx / distance) * speed;
-            y += (dy / distance) * speed;
+            x +=
+                (dx / distance)
+                * speed;
+
+            y +=
+                (dy / distance)
+                * speed;
         }
 
         // Used for tower targeting
@@ -74,16 +86,29 @@ public class Enemy
 
     public boolean reachedEnd()
     {
-        return pathIndex >= path.length - 1;
+        return pathIndex >=
+               path.length - 1;
     }
 
     public void draw(Graphics g)
     {
-        int size = 16;
+        // Bigger enemy size for 1440x900
+        int size = 28;
 
+        // Main body
         g.setColor(Color.RED);
 
         g.fillOval(
+            (int)x - size / 2,
+            (int)y - size / 2,
+            size,
+            size
+        );
+
+        // Outline
+        g.setColor(Color.BLACK);
+
+        g.drawOval(
             (int)x - size / 2,
             (int)y - size / 2,
             size,
