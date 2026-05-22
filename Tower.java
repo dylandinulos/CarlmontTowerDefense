@@ -1,4 +1,4 @@
-package main; 
+package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-public class Tower 
+public class Tower
 {
     private int damage;
     private int cost;
@@ -42,7 +42,7 @@ public class Tower
         {
             damage = 3;
             cost = 3;
-            range = 1;
+            range = 2;
             cooldown = 180;
 
             loadImage("SuperSenior.jpg");
@@ -53,7 +53,7 @@ public class Tower
         {
             damage = 2;
             cost = 2;
-            range = 4;
+            range = 5;
             cooldown = 160;
 
             loadImage("Teacher.jpg");
@@ -62,10 +62,10 @@ public class Tower
         // Nurse / Counselor
         else if(index == 4)
         {
-            damage = 35;
+            damage = 3;
             cost = 5;
-            range = 3;
-            cooldown = 50;
+            range = 4;
+            cooldown = 120;
 
             loadImage("Nurse.jpg");
         }
@@ -73,9 +73,9 @@ public class Tower
         // Principal
         else if(index == 5)
         {
-            damage = 150;
+            damage = 5;
             cost = 7;
-            range = 4;
+            range = 6;
             cooldown = 200;
 
             loadImage("Principal.jpg");
@@ -91,11 +91,13 @@ public class Tower
         }
     }
 
-    public void update(ArrayList<Enemy> enemies)
+    public void update(
+        ArrayList<Enemy> enemies
+    )
     {
         timer++;
 
-        // Still cooling down
+        // Cooling down
         if(timer < cooldown)
         {
             return;
@@ -108,42 +110,61 @@ public class Tower
         // Find furthest enemy in range
         for(Enemy enemy : enemies)
         {
-            double dx = enemy.x - x;
-            double dy = enemy.y - y;
+            double dx =
+                enemy.x - x;
+
+            double dy =
+                enemy.y - y;
 
             double distance =
-                Math.sqrt(dx * dx + dy * dy);
+                Math.sqrt(
+                    dx * dx +
+                    dy * dy
+                );
 
-            if(distance <= range * 32)
+            if(distance <=
+               range *
+               GameScreen.TILE_SIZE)
             {
-                if(enemy.progress > bestProgress)
+                if(enemy.progress >
+                   bestProgress)
                 {
-                    bestProgress = enemy.progress;
-                    bestTarget = enemy;
+                    bestProgress =
+                        enemy.progress;
+
+                    bestTarget =
+                        enemy;
                 }
             }
         }
 
-        // Attack target
+        // Attack
         if(bestTarget != null)
         {
-            bestTarget.health -= damage;
+            bestTarget.health -=
+                damage;
 
             timer = 0;
         }
     }
 
-    private void loadImage(String fileName)
+    private void loadImage(
+        String fileName
+    )
     {
         try
         {
             URL imageURL =
-                getClass().getResource(fileName);
+                getClass().getResource(
+                    fileName
+                );
 
             if(imageURL != null)
             {
                 image =
-                    new ImageIcon(imageURL).getImage();
+                    new ImageIcon(
+                        imageURL
+                    ).getImage();
             }
         }
         catch(Exception e)
@@ -154,6 +175,9 @@ public class Tower
 
     public void draw(Graphics g)
     {
+        // Bigger towers for 40px tiles
+        int towerSize = 32;
+
         // Draw image if loaded
         if(image != null)
         {
@@ -161,18 +185,33 @@ public class Tower
                 image,
                 x,
                 y,
-                24,
-                24,
+                towerSize,
+                towerSize,
                 null
             );
         }
         else
         {
-            // Fallback rectangle
+            // Fallback
             g.setColor(Color.BLUE);
 
-            g.fillRect(x, y, 24, 24);
+            g.fillRect(
+                x,
+                y,
+                towerSize,
+                towerSize
+            );
         }
+
+        // Border
+        g.setColor(Color.BLACK);
+
+        g.drawRect(
+            x,
+            y,
+            towerSize,
+            towerSize
+        );
     }
 
     // Getters
