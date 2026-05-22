@@ -1,19 +1,17 @@
 package main;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Font;
-import javax.swing.JPanel;
-import java.net.URL;
+import java.awt.Graphics;
 import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JFrame;
+import java.net.URL;
 
-public Class StartScreen
+import javax.swing.ImageIcon;
+
+public class StartScreen
 {
-  private Image logo;
-    //private JFrame frame;
+    private Image logo;
+
     public void loadImage(String fileName)
     {
         URL imageURL =
@@ -21,26 +19,113 @@ public Class StartScreen
 
         if(imageURL != null)
         {
-            logo = new ImageIcon(imageURL).getImage();
+            logo =
+                new ImageIcon(imageURL)
+                .getImage();
         }
     }
+
     public void render(Graphics g)
     {
-        Color c1 = new Color(200, 200, 200);        
-        g.setColor(c1);
-        g.fillRect(0,0, 640, 640);
-        
-        Font font1 = new Font ("arial", Font.BOLD, 50);
-        g.setFont(font1);
+        // Background
+        Color background =
+            new Color(200, 200, 200);
+
+        g.setColor(background);
+
+        g.fillRect(
+            0,
+            0,
+            1440,
+            900
+        );
+
+        // Title
+        Font titleFont =
+            new Font(
+                "Arial",
+                Font.BOLD,
+                64
+            );
+
+        g.setFont(titleFont);
+
         g.setColor(Color.BLACK);
-        g.drawString("Carlmont Tower Defense", 20, 100);
-        
-        Font font2 = new Font ("arial", Font.PLAIN, 25);
-        g.setFont(font2);
-        g.drawString("Click to Play!", 240, 480);
-        
-        /* ImageIcon i = new ImageIcon("Student.jpg");
-        JLabel label = new JLabel(i);
-        frame.add(label); */
+
+        g.drawString(
+            "Carlmont Tower Defense",
+            320,
+            220
+        );
+
+        // Main box
+        g.setColor(
+            new Color(
+                60,
+                60,
+                60
+            )
+        );
+
+        g.fillRoundRect(
+            420,
+            420,
+            600,
+            160,
+            30,
+            30
+        );
+
+        // Border
+        g.setColor(Color.WHITE);
+
+        g.drawRoundRect(
+            420,
+            420,
+            600,
+            160,
+            30,
+            30
+        );
+
+        // Instructions
+        Font infoFont =
+            new Font(
+                "Arial",
+                Font.PLAIN,
+                32
+            );
+
+        g.setFont(infoFont);
+
+        g.drawString(
+            "Click Anywhere to Start",
+            520,
+            500
+        );
+
+        g.drawString(
+            "Defend the school from enemies!",
+            470,
+            550
+        );
+
+        // Bottom text
+        Font bottomFont =
+            new Font(
+                "Arial",
+                Font.PLAIN,
+                22
+            );
+
+        g.setFont(bottomFont);
+
+        g.setColor(Color.BLACK);
+
+        g.drawString(
+            "Built with Java Swing",
+            590,
+            820
+        );
     }
 }
