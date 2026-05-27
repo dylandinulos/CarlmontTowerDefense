@@ -4,15 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Image;
+
 import java.net.URL;
 
 import javax.swing.ImageIcon;
-
 public class Enemy
 {
     double x, y;
     double speed;
-
     private Image image;
 
     int health;
@@ -23,6 +22,7 @@ public class Enemy
     Point[] path;
 
     int pathIndex = 0;
+    
 
     public Enemy(Point[] path, double speed, int health, String type)
     {
@@ -34,16 +34,16 @@ public class Enemy
 
         x = path[0].x;
         y = path[0].y;
-
-        if(type.equals("tank"))
+        
+        if (type.equals("tank"))
         {
             loadImage("tank.png");
         }
-        else if(type.equals("fast"))
+        else if (type.equals("fast"))
         {
             loadImage("fast.png");
         }
-        else if(type.equals("boss"))
+        else if (type.equals("boss"))
         {
             loadImage("boss.png");
         }
@@ -90,33 +90,28 @@ public class Enemy
 
     public void draw(Graphics g)
     {
-        int size = 28;
-
-        if(image != null)
+        if (image != null)
         {
-            g.drawImage(image, (int)x - size / 2, (int)y - size / 2, size, size, null);
-        }
-        else
-        {
+            int size = 28;
+    
             g.setColor(Color.RED);
+    
+            g.drawImage(image, (int)x - size / 2, (int)y - size / 2, size, size, null);
 
-            g.fillOval((int)x - size / 2, (int)y - size / 2, size, size);
-
-            g.setColor(Color.BLACK);
-
-            g.drawOval((int)x - size / 2, (int)y - size / 2, size, size);
         }
     }
-
     private void loadImage(String fileName)
     {
         try
         {
-            URL imageURL = getClass().getResource(fileName);
+            URL imageURL =
+                getClass().getResource(fileName);
 
             if(imageURL != null)
             {
-                image = new ImageIcon(imageURL).getImage();
+                image =
+                    new ImageIcon(imageURL)
+                    .getImage();
             }
         }
         catch(Exception e)
