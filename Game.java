@@ -21,7 +21,6 @@ public class Game extends JFrame
 
     public Game()
     {
-        // Better size for MacBook Air
         setSize(1440, 900);
 
         setTitle("Carlmont Tower Defense");
