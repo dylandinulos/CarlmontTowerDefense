@@ -17,6 +17,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.ImageIcon;
 
 public class GameScreen extends JPanel implements MouseListener
 {
@@ -40,6 +41,8 @@ public class GameScreen extends JPanel implements MouseListener
     private StartScreen startScreen = new StartScreen();
     private EndScreen endScreen = new EndScreen();
 
+    private Image image;
+    
     // Looping path
     Point[] path = {
 
@@ -181,16 +184,16 @@ public class GameScreen extends JPanel implements MouseListener
         switch(type)
         {
             case "tank":
-                return new Enemy(path, 0.5, 120);
+                return new Enemy(path, 0.5, 120, "tank");
 
             case "fast":
-                return new Enemy(path, 2.5, 40);
+                return new Enemy(path, 2.5, 40, "fast");
 
             case "boss":
-                return new Enemy(path, 0.3, 300);
+                return new Enemy(path, 0.3, 300, "boss");
 
             default:
-                return new Enemy(path, 1, 70);
+                return new Enemy(path, 1, 70, "normal");
         }
     }
 
