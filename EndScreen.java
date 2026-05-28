@@ -11,17 +11,6 @@ import javax.swing.ImageIcon;
 public class EndScreen
 {
     private Image logo;
-
-    public void loadImage(String fileName)
-    {
-        URL imageURL = getClass().getResource(fileName);
-
-        if(imageURL != null)
-        {
-            logo = new ImageIcon(imageURL).getImage();
-        }
-    }
-
     public void render(Graphics g)
     {
         Color background = new Color(200, 200, 200);
