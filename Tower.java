@@ -1,3 +1,4 @@
+package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,56 +29,56 @@ public class Tower
         // Student
         if(index == 1)
         {
-            damage = 40;
-            cost = 100;
+            damage = 35;
+            cost = 20;
             range = 3;
-            cooldown = 60;
+            cooldown = 120;
 
-            loadImage("Student.jpg");
+            loadImage("Student.png");
         }
 
         // Super Senior
         else if(index == 2)
         {
-            damage = 80;
-            cost = 140;
+            damage = 30;
+            cost = 40;
             range = 2;
-            cooldown = 90;
+            cooldown = 60;
 
-            loadImage("SuperSenior.jpg");
+            loadImage("SuperSenior.png");
         }
 
         // Teacher
         else if(index == 3)
         {
-            damage = 90;
-            cost = 120;
-            range = 5;
-            cooldown = 80;
+            damage = 40;
+            cost = 80;
+            range = 4;
+            cooldown = 160;
 
-            loadImage("Teacher.jpg");
+            loadImage("Teacher.png");
         }
 
         // Nurse / Counselor
         else if(index == 4)
         {
-            damage = 10;
+            damage = 35;
             cost = 150;
-            range = 4;
-            cooldown = 10;
+            range = 3;
+            cooldown = 50;
 
-            loadImage("Nurse.jpg");
+            loadImage("Nurse.png");
         }
 
         // Principal
         else if(index == 5)
         {
-            damage = 100;
-            cost = 180;
-            range = 6;
-            cooldown = 150;
+            damage = 80;
+            cost = 200;
+            range = 4;
+            cooldown = 200;
 
-            loadImage("Principal.jpg");
+            loadImage("Principal.png");
         }
 
         // Fallback
@@ -86,13 +87,11 @@ public class Tower
             damage = 1;
             cost = 1;
             range = 2;
-            cooldown = 60;
+            cooldown = 120;
         }
     }
 
-    public void update(
-        ArrayList<Enemy> enemies
-    )
+    public void update(ArrayList<Enemy> enemies)
     {
         timer++;
 
@@ -109,30 +108,18 @@ public class Tower
         // Find furthest enemy in range
         for(Enemy enemy : enemies)
         {
-            double dx =
-                enemy.x - x;
-
-            double dy =
-                enemy.y - y;
+            double dx = enemy.x - x;
+            double dy = enemy.y - y;
 
             double distance =
-                Math.sqrt(
-                    dx * dx +
-                    dy * dy
-                );
+                Math.sqrt(dx * dx + dy * dy);
 
-            if(distance <=
-               range *
-               GameScreen.TILE_SIZE)
+            if(distance <= range * GameScreen.TILE_SIZE)
             {
-                if(enemy.progress >
-                   bestProgress)
+                if(enemy.progress > bestProgress)
                 {
-                    bestProgress =
-                        enemy.progress;
-
-                    bestTarget =
-                        enemy;
+                    bestProgress = enemy.progress;
+                    bestTarget = enemy;
                 }
             }
         }
@@ -140,30 +127,21 @@ public class Tower
         // Attack
         if(bestTarget != null)
         {
-            bestTarget.health -=
-                damage;
+            bestTarget.health -= damage;
 
             timer = 0;
         }
     }
 
-    private void loadImage(
-        String fileName
-    )
+    private void loadImage(String fileName)
     {
         try
         {
-            URL imageURL =
-                getClass().getResource(
-                    fileName
-                );
+            URL imageURL = getClass().getResource(fileName);
 
             if(imageURL != null)
             {
-                image =
-                    new ImageIcon(
-                        imageURL
-                    ).getImage();
+                image =new ImageIcon(imageURL).getImage();
             }
         }
         catch(Exception e)
@@ -174,7 +152,7 @@ public class Tower
 
     public void draw(Graphics g)
     {
-        // Bigger towers for 40px tiles
+        // Bigger towers for larger tiles
         int towerSize = 32;
 
         // Draw image if loaded
@@ -233,7 +211,29 @@ public class Tower
     {
         return cost;
     }
+
+    // Static cost lookup
+    public static int getCost(int towerType)
+    {
+        if(towerType == 1)
+        {
+            return 20;
+        }
+        else if(towerType == 2)
+        {
+            return 40;
+        }
+        else if(towerType == 3)
+        {
+            return 80;
+        }
+        else if(towerType == 4)
+        {
+            return 150;
+        }
+        else
+        {
+            return 200;
+        }
+    }
 }
-
-
-
