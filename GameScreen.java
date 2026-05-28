@@ -47,9 +47,11 @@ public class GameScreen extends JPanel implements MouseListener
     private boolean placingTower = false;
     private int selectedTowerType = 1;
 
+    //The various displays
     private StartScreen startScreen = new StartScreen();
-
     private EndScreen endScreen = new EndScreen();
+    private WinScreen winScreen = new WinScreen();
+    
 
     
     // Looping path with upward start
@@ -414,6 +416,10 @@ public class GameScreen extends JPanel implements MouseListener
                 }
             }
         }
+        else
+        {
+            Game.State = Game.STATE.WIN;
+        }
         for(Tower tower : towers)
         {
             tower.update(enemies);
@@ -480,6 +486,11 @@ public class GameScreen extends JPanel implements MouseListener
         if(Game.State == Game.STATE.END)
         {
             endScreen.render(g);
+            return;
+        }
+        if(Game.State == Game.STATE.WIN)
+        {
+            winScreen.render(g);
             return;
         }
 
