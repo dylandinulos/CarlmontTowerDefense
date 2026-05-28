@@ -72,20 +72,13 @@ public class Enemy
         }
 
         // Next target point
-        Point target =
-            path[pathIndex + 1];
+        Point target = path[pathIndex + 1];
 
-        double dx =
-            target.x - x;
+        double dx = target.x - x;
 
-        double dy =
-            target.y - y;
+        double dy = target.y - y;
 
-        double distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
+        double distance = Math.sqrt(dx * dx + dy * dy);
 
         // Reached target point
         if(distance <= speed)
@@ -98,13 +91,9 @@ public class Enemy
         else
         {
             // Move toward target
-            x +=
-                (dx / distance)
-                * speed;
+            x += (dx / distance) * speed;
 
-            y +=
-                (dy / distance)
-                * speed;
+            y += (dy / distance) * speed;
         }
 
         // Used for tower targeting
@@ -132,14 +121,11 @@ public class Enemy
     {
         try
         {
-            URL imageURL =
-                getClass().getResource(fileName);
+            URL imageURL = getClass().getResource(fileName);
 
             if(imageURL != null)
             {
-                image =
-                    new ImageIcon(imageURL)
-                    .getImage();
+                image = new ImageIcon(imageURL).getImage();
             }
         }
         catch(Exception e)
