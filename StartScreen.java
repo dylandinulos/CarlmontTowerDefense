@@ -11,55 +11,25 @@ import javax.swing.ImageIcon;
 public class StartScreen
 {
     private Image logo;
-
-    public void loadImage(String fileName)
-    {
-        URL imageURL = getClass().getResource(fileName);
-
-        if(imageURL != null)
-        {
-            logo = new ImageIcon(imageURL).getImage();
-        }
-    }
-
     public void render(Graphics g)
     {
-        Color background = new Color(200, 200, 200);
-
-        g.setColor(background);
-
+        //Background
+        Color backgroundColor = new Color(46, 158, 255);
+        g.setColor(backgroundColor);
         g.fillRect(0, 0, 1440, 900);
 
-        Font titleFont = new Font("Arial", Font.BOLD, 64);
-
-        g.setFont(titleFont);
-
+        //text stuff
+        Font title = new Font("Arial", Font.BOLD, 64);
+        g.setFont(title);
         g.setColor(Color.BLACK);
-
         g.drawString("Carlmont Tower Defense", 320, 220);
 
-        g.setColor(new Color(60, 60, 60));
-
-        g.fillRoundRect(420, 420, 600, 160, 30, 30);
-
+        g.setColor(new Color(60, 60, 60));       
+        g.fillRoundRect(400, 420, 600, 160, 30, 30);
+        
         g.setColor(Color.WHITE);
-
-        g.drawRoundRect(420, 420, 600, 160, 30, 30);
-
-        Font infoFont = new Font("Arial", Font.PLAIN, 32);
-
-        g.setFont(infoFont);
-
-        g.drawString("Click Anywhere to Start", 520, 500);
-
-        g.drawString("Defend the school from enemies!", 470, 550);
-
-        Font bottomFont = new Font("Arial", Font.PLAIN, 22);
-
-        g.setFont(bottomFont);
-
-        g.setColor(Color.BLACK);
-
-        g.drawString("Built with Java Swing", 590, 820);
+        Font f2 = new Font("Arial", Font.PLAIN, 32);
+        g.setFont(f2);
+        g.drawString("Click Anywhere to Start", 530, 510);
     }
 }
