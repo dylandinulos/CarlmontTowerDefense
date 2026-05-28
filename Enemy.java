@@ -3,41 +3,66 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Image;
 
+import java.net.URL;
+
+import javax.swing.ImageIcon;
 public class Enemy
 {
     double x, y;
-
     double speed;
+    private Image image;
 
     int health;
     int maxHealth;
-    //camo stuff
-    public boolean camo;
-
-    public double progress;
     
-    public int reward;
+    public boolean camo;
+    
+    public double progress;
 
+    public int reward;
+    
     Point[] path;
 
     int pathIndex = 0;
+    
 
-        public Enemy(Point[] path,double speed,int health,boolean camo,int reward)
+    public Enemy(Point[] path, double speed, int health, boolean camo, int reward, String type)
     {
         this.path = path;
-    
         this.speed = speed;
-        
+
         this.health = health;
         this.maxHealth = health;
+        
         this.reward = reward;
         this.camo = camo;
-    
+
         x = path[0].x;
         y = path[0].y;
+        
+        if (type.equals("tank"))
+        {
+            loadImage("tank.png");
+        }
+        else if (type.equals("fast"))
+        {
+            loadImage("fast.png");
+        }
+        else if (type.equals("boss"))
+        {
+            loadImage("boss.png");
+        }
+        else if (type.equals("camo"))
+        {
+            loadImage("camo.png");
+        }
+        else
+        {
+            loadImage("normal.png");
+        }
     }
-
     public void update()
     {
         // Already reached end
@@ -88,34 +113,38 @@ public class Enemy
 
     public boolean reachedEnd()
     {
-        return pathIndex >=
-               path.length - 1;
+        return pathIndex >= path.length - 1;
     }
 
     public void draw(Graphics g)
     {
-        // Bigger enemy size for 1440x900
-        int size = 28;
+        if (image != null)
+        {
+            int size = 28;
+    
+            g.setColor(Color.RED);
+    
+            g.drawImage(image, (int)x - size / 2, (int)y - size / 2, size, size, null);
 
-        // Main body
-        g.setColor(Color.RED);
+        }
+    }
+    private void loadImage(String fileName)
+    {
+        try
+        {
+            URL imageURL =
+                getClass().getResource(fileName);
 
-        g.fillOval(
-            (int)x - size / 2,
-            (int)y - size / 2,
-            size,
-            size
-        );
-
-        // Outline
-        g.setColor(Color.BLACK);
-
-        g.drawOval(
-            (int)x - size / 2,
-            (int)y - size / 2,
-            size,
-            size
-        );
+            if(imageURL != null)
+            {
+                image =
+                    new ImageIcon(imageURL)
+                    .getImage();
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
-
