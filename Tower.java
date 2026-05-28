@@ -25,7 +25,6 @@ public class Tower
     {
         this.x = x;
         this.y = y;
-
         // Student
         if(index == 1)
         {
@@ -111,8 +110,7 @@ public class Tower
             double dx = enemy.x - x;
             double dy = enemy.y - y;
 
-            double distance =
-                Math.sqrt(dx * dx + dy * dy);
+            double distance = Math.sqrt(dx * dx + dy * dy);
 
             if(distance <= range * GameScreen.TILE_SIZE)
             {
@@ -158,37 +156,20 @@ public class Tower
         // Draw image if loaded
         if(image != null)
         {
-            g.drawImage(
-                image,
-                x,
-                y,
-                towerSize,
-                towerSize,
-                null
-            );
+            g.drawImage(image, x, y, towerSize, towerSize, null);
         }
         else
         {
             // Fallback
             g.setColor(Color.BLUE);
 
-            g.fillRect(
-                x,
-                y,
-                towerSize,
-                towerSize
-            );
+            g.fillRect(x, y, towerSize, towerSize);
         }
 
         // Border
         g.setColor(Color.BLACK);
 
-        g.drawRect(
-            x,
-            y,
-            towerSize,
-            towerSize
-        );
+        g.drawRect(x, y, towerSize, towerSize);
     }
 
     // Getters
