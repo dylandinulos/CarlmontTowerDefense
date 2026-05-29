@@ -28,11 +28,9 @@ public class GameScreen extends JPanel implements MouseListener
     // Fits vertically inside 900 height
     public static final int ROWS = 19;
 
-    public static final int SHOP_HEIGHT =
-        TILE_SIZE * 3;
+    public static final int SHOP_HEIGHT = TILE_SIZE * 3;
 
-    private final int SHOP_TILE_SIZE =
-        (int)(TILE_SIZE * 2.5);
+    private final int SHOP_TILE_SIZE = (int)(TILE_SIZE * 2.5);
 
     private Random random;
 
@@ -98,8 +96,8 @@ public class GameScreen extends JPanel implements MouseListener
 
     private int[][] map = new int[ROWS][COLS];
 
-    private int money = 210;
-    private int lives = 20;
+    private int money = 80;
+    private int lives = 10;
     private int waveBonus = 20;
     private int wave = 0;
     private int currentEnemyIndex = 0;
@@ -168,28 +166,28 @@ public class GameScreen extends JPanel implements MouseListener
     }
     private void drawShop(Graphics g)
     {
-    g.setColor(Color.DARK_GRAY);
-
-    g.fillRect(0, 0, getWidth(), SHOP_HEIGHT);
-
-    for(int i = 0; i < 5; i++)
-    {
-        int x = 160 + i * (SHOP_TILE_SIZE + 30);
-        int y = 10;
-
-        g.setColor(Color.GRAY);
-        g.fillRect(x, y, SHOP_TILE_SIZE, SHOP_TILE_SIZE);
-
-        g.setColor(Color.BLACK);
-        g.drawRect(x, y, SHOP_TILE_SIZE, SHOP_TILE_SIZE);
-
-        Tower preview = new Tower(i + 1, x + 34, y + 34);
-
-        preview.draw(g);
-
-        g.setColor(Color.WHITE);
-        g.drawString("$" + preview.getCost(), x + 10, y + SHOP_TILE_SIZE + 10);
-    }
+        g.setColor(Color.DARK_GRAY);    
+        g.fillRect(0, 0, getWidth(), SHOP_HEIGHT);
+    
+        for(int i = 0; i < 5; i++)
+        {
+            int x = 160 + i * (SHOP_TILE_SIZE + 30);
+            int y = 10;
+    
+            g.setColor(Color.GRAY);
+            g.fillRect(x, y, SHOP_TILE_SIZE, SHOP_TILE_SIZE);
+    
+            g.setColor(Color.BLACK);
+            g.drawRect(x, y, SHOP_TILE_SIZE, SHOP_TILE_SIZE);
+    
+            Tower shopTower = new Tower(i + 1, x + 34, y + 34);
+    
+            shopTower.draw(g);
+    
+            g.setColor(Color.WHITE);
+            g.drawString("$" + shopTower.getCost(), x + 80, y + SHOP_TILE_SIZE + 10);
+            g.drawString(shopTower.getName(), x, y + SHOP_TILE_SIZE + 10);
+        }
     }
     private void setupWaves()
     {
@@ -197,33 +195,39 @@ public class GameScreen extends JPanel implements MouseListener
         wave0.add("base");
         wave0.add("base");
         wave0.add("base");
-    
+
+        
         ArrayList<String> wave1 = new ArrayList<>();
         wave1.add("base");
-        wave1.add("fast");
         wave1.add("base");
-        wave1.add("fast");
+        wave1.add("base");
+        wave1.add("base");
+        wave1.add("base");
     
         ArrayList<String> wave2 = new ArrayList<>();
         wave2.add("base");
         wave2.add("fast");
-        wave2.add("tank");
         wave2.add("base");
         wave2.add("fast");
+        wave2.add("base");
+        wave2.add("base");
+        wave2.add("base");
     
         ArrayList<String> wave3 = new ArrayList<>();
-        wave3.add("tank");
+        wave3.add("base");
         wave3.add("fast");
         wave3.add("fast");
         wave3.add("base");
         wave3.add("tank");
     
         ArrayList<String> wave4 = new ArrayList<>();
-        wave4.add("fast");
+        wave4.add("base");
         wave4.add("tank");
         wave4.add("fast");
         wave4.add("tank");
         wave4.add("base");
+        wave4.add("tank");
+        
     
         ArrayList<String> wave5 = new ArrayList<>();
         wave5.add("base");
@@ -231,45 +235,87 @@ public class GameScreen extends JPanel implements MouseListener
         wave5.add("fast");
         wave5.add("base");
         wave5.add("camo");
+        wave5.add("tank");
+
     
         ArrayList<String> wave6 = new ArrayList<>();
+        wave6.add("base");
+        wave6.add("base");
+        wave6.add("base");
+        wave6.add("base");
+        wave6.add("base");
         wave6.add("camo");
         wave6.add("fast");
         wave6.add("tank");
+        wave6.add("tank");
+        wave6.add("tank");
         wave6.add("camo");
-        wave6.add("base");
     
         ArrayList<String> wave7 = new ArrayList<>();
-        wave7.add("tank");
-        wave7.add("tank");
+        wave7.add("fast");
         wave7.add("fast");
         wave7.add("camo");
+        wave7.add("camo");
         wave7.add("fast");
-        wave7.add("base");
-    
+        wave7.add("camo");
+        wave7.add("tank");
+        wave7.add("tank");
+        wave7.add("tank");
+
+        
         ArrayList<String> wave8 = new ArrayList<>();
+        wave8.add("base");
+        wave8.add("base");
+        wave8.add("base");
+        wave8.add("base");
         wave8.add("fast");
         wave8.add("fast");
         wave8.add("camo");
         wave8.add("camo");
+        wave8.add("camo");
+        wave8.add("camo");
+        wave8.add("tank");
         wave8.add("tank");
         wave8.add("tank");
     
         ArrayList<String> wave9 = new ArrayList<>();
-        wave9.add("boss");
         wave9.add("fast");
+        wave9.add("fast");
+        wave9.add("fast");
+        wave9.add("base");
+        wave9.add("base");
+        wave9.add("camo");
         wave9.add("camo");
         wave9.add("tank");
-        wave9.add("fast");
+        wave9.add("tank");
+        wave9.add("tank");
+        wave9.add("tank");
+        wave9.add("boss");
+        wave9.add("boss");
     
         ArrayList<String> wave10 = new ArrayList<>();
+        wave10.add("base");
+        wave10.add("base");
+        wave10.add("base");
+        wave10.add("base");
+        wave10.add("base");
+        wave10.add("tank");
+        wave10.add("fast");
+        wave10.add("camo");
+        wave10.add("camo");
+        wave10.add("fast");
+        wave10.add("tank");
+        wave10.add("tank");
+        wave10.add("tank");
+        wave10.add("tank");
+        wave10.add("tank");
+        wave10.add("tank");
         wave10.add("boss");
-        wave10.add("tank");
-        wave10.add("fast");
-        wave10.add("camo");
-        wave10.add("camo");
-        wave10.add("fast");
-        wave10.add("tank");
+        wave10.add("boss");
+        wave10.add("boss");
+        wave10.add("boss");
+        wave10.add("boss");
+
     
         waves.add(wave0);
         waves.add(wave1);
@@ -285,23 +331,23 @@ public class GameScreen extends JPanel implements MouseListener
     }
     private Enemy createEnemy(String type)
     {
-    switch(type)
-    {
-        case "tank":
-            return new Enemy(path, 1, 180, false, 20, "tank");
-
-        case "fast":
-            return new Enemy(path, 5, 60, false, 9, "fast");
-
-        case "boss":
-            return new Enemy(path, 0.6, 1000, false, 65, "boss");
-
-        case "camo":
-            return new Enemy(path, 3, 60, true, 20, "camo");
-
-        default:
-            return new Enemy(path, 2, 70, false, 15, "normal");
-    }
+        switch(type)
+        {
+            case "tank":
+                return new Enemy(path, 1, 500, false, 20, "tank");
+    
+            case "fast":
+                return new Enemy(path, 5, 80, false, 12, "fast");
+    
+            case "boss":
+                return new Enemy(path, 0.6, 2000, false, 150, "boss");
+    
+            case "camo":
+                return new Enemy(path, 3, 200, true, 15, "camo");
+    
+            default:
+                return new Enemy(path, 2, 50, false, 8, "normal");
+        }
     }
     private boolean isOnPath(int mouseX, int mouseY)
     {
@@ -317,7 +363,6 @@ public class GameScreen extends JPanel implements MouseListener
                 return true;
             }
         }
-
         return false;
     }
     private boolean isOnSchool(int mouseX, int mouseY)
@@ -378,7 +423,7 @@ public class GameScreen extends JPanel implements MouseListener
                 enemies.remove(i);
 
                 lives--;
-                money -= 5;
+                money -= 10;
 
                 if(lives <= 0)
                 {
@@ -731,9 +776,10 @@ public class GameScreen extends JPanel implements MouseListener
             money -= newTower.getCost();
             
             selectedTower = null;
-            placingTower = false;       
+            placingTower = false;
         }
-    }    
+    }
+    
     private void drawButtons(Graphics g)
     {
         if(!gameStarted)
@@ -761,6 +807,7 @@ public class GameScreen extends JPanel implements MouseListener
             g.drawString("x" + gameSpeed, shopX + 125, shopY + 20);
         }
     }   
+    
     @Override
     public void mouseClicked(MouseEvent e)
     {
