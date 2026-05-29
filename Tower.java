@@ -14,7 +14,8 @@ public class Tower
     private int cost;
     private int range;
     private int cooldown;
-
+    private String name;
+    
     private int x, y;
 
     private int timer = 0;
@@ -28,10 +29,11 @@ public class Tower
         // Student
         if(index == 1)
         {
-            damage = 35;
+            name = "Student";
+            damage = 5;
             cost = 20;
             range = 3;
-            cooldown = 120;
+            cooldown = 30;
 
             loadImage("Student.png");
         }
@@ -39,10 +41,11 @@ public class Tower
         // Super Senior
         else if(index == 2)
         {
-            damage = 30;
-            cost = 40;
-            range = 2;
-            cooldown = 60;
+            name = "Super Senior";
+            damage = 55;
+            cost = 50;
+            range = 3;
+            cooldown = 120;
 
             loadImage("SuperSenior.png");
         }
@@ -50,21 +53,23 @@ public class Tower
         // Teacher
         else if(index == 3)
         {
-            damage = 40;
-            cost = 80;
+            name = "Teacher";
+            damage = 20;
+            cost = 90;
             range = 4;
-            cooldown = 160;
+            cooldown = 40;
 
             loadImage("Teacher.png");
         }
 
-        // Nurse / Counselor
+        // Nurse
         else if(index == 4)
         {
-            damage = 35;
+            name = "Nurse";
+            damage = 60;
             cost = 150;
-            range = 3;
-            cooldown = 50;
+            range = 4;
+            cooldown = 180;
 
             loadImage("Nurse.png");
         }
@@ -72,10 +77,11 @@ public class Tower
         // Principal
         else if(index == 5)
         {
-            damage = 80;
-            cost = 200;
-            range = 4;
-            cooldown = 200;
+            name = "Principal";
+            damage = 110;
+            cost = 250;
+            range = 5;
+            cooldown = 60;
 
             loadImage("Principal.png");
         }
@@ -83,6 +89,7 @@ public class Tower
         // Fallback
         else
         {
+            name = null;
             damage = 1;
             cost = 1;
             range = 2;
@@ -191,6 +198,11 @@ public class Tower
     public int getCost()
     {
         return cost;
+    }
+    
+    public String getName()
+    {
+        return name;
     }
 
     // Static cost lookup
