@@ -303,8 +303,11 @@ public class GameScreen extends JPanel implements MouseListener
         wave10.add("base");
         wave10.add("base");
         wave10.add("base");
+        wave10.add("base");
         wave10.add("tank");
         wave10.add("fast");
+        wave10.add("tank");
+        wave10.add("tank");
         wave10.add("camo");
         wave10.add("camo");
         wave10.add("fast");
@@ -319,8 +322,9 @@ public class GameScreen extends JPanel implements MouseListener
         wave10.add("boss");
         wave10.add("boss");
         wave10.add("boss");
-
-    
+        wave10.add("boss");
+        wave10.add("boss");
+        
         waves.add(wave0);
         waves.add(wave1);
         waves.add(wave2);
