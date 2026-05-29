@@ -12,7 +12,7 @@ public class Game extends JFrame
 
     public enum STATE
     {
-        MENU, GAME, END
+        MENU, GAME, END, WIN
     };
 
     public static STATE State = STATE.MENU;
