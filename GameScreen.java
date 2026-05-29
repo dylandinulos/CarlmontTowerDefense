@@ -615,14 +615,24 @@ public class GameScreen extends JPanel implements MouseListener
         }       
         if(placingTower)
         {
-            Point mouse = getMousePosition();        
+            Point mouse = getMousePosition();
+
             if(mouse != null)
             {
                 g.setColor(new Color(255, 255, 255, 120));
-        
-                int previewRange = 3 * TILE_SIZE;
-        
-                g.drawOval(mouse.x - previewRange, mouse.y - previewRange, previewRange * 2, previewRange * 2);
+
+                Tower previewTower =
+                    new Tower(selectedTowerType, mouse.x, mouse.y);
+
+                int previewRange =
+                    previewTower.getRange() * TILE_SIZE;
+
+                g.drawOval(
+                    mouse.x - previewRange,
+                    mouse.y - previewRange,
+                    previewRange * 2,
+                    previewRange * 2
+                );
             }
         }
         
