@@ -270,6 +270,9 @@ public class GameScreen extends JPanel implements MouseListener
         wave8.add("base");
         wave8.add("fast");
         wave8.add("fast");
+        wave8.add("fast");
+        wave8.add("fast");
+        wave8.add("camo");
         wave8.add("camo");
         wave8.add("camo");
         wave8.add("camo");
@@ -277,6 +280,7 @@ public class GameScreen extends JPanel implements MouseListener
         wave8.add("tank");
         wave8.add("tank");
         wave8.add("tank");
+        
     
         ArrayList<String> wave9 = new ArrayList<>();
         wave9.add("fast");
