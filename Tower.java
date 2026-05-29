@@ -79,7 +79,7 @@ public class Tower
         {
             name = "Principal";
             damage = 110;
-            cost = 250;
+            cost = 300;
             range = 5;
             cooldown = 60;
 
@@ -214,11 +214,11 @@ public class Tower
         }
         else if(towerType == 2)
         {
-            return 40;
+            return 50;
         }
         else if(towerType == 3)
         {
-            return 80;
+            return 90;
         }
         else if(towerType == 4)
         {
@@ -226,7 +226,7 @@ public class Tower
         }
         else
         {
-            return 200;
+            return 300;
         }
     }
 }
